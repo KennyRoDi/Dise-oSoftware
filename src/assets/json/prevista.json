@@ -1,0 +1,36 @@
+[
+  {
+    "id": 101,
+    "titulo": "Nuevo Talento Musical",
+    "usuario": "nuevo_usuario",
+    "imagenes": [
+      "nuevo_talento_catalogo.jpg",
+      "nuevo_talento_portada.jpg",
+      "nuevo_talento_quien_soy.jpg",
+      "nuevo_talento_que_hago.jpg",
+      "nuevo_talento_paquete1.jpg",
+      "nuevo_talento_paquete2.jpg"
+    ],
+    "eslogan": "Un sonido fresco para tus eventos",
+    "quien_soy": "Artista emergente con pasión por la música en vivo",
+    "que_hago": "Ofrezco presentaciones acústicas y eléctricas para eventos sociales",
+    "paquetes": [
+      {
+        "nombre": "Acústico Básico",
+        "descripcion": "30 minutos de música acústica",
+        "precio": 150
+      },
+      {
+        "nombre": "Set Completo",
+        "descripcion": "1 hora de música en vivo con equipo propio",
+        "precio": 300
+      }
+    ],
+    "requisitos": [
+      "Toma eléctrica cercana",
+      "Espacio cubierto en caso de lluvia"
+    ],
+    "categoria": "Música",
+    "ubicacion": "San José"
+  }
+]

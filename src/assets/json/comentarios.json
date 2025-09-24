@@ -1,0 +1,50 @@
+[
+  {
+    "usuario": "Adrián",
+    "servicio": "EntertainFlix",
+    "puntuacion": 5,
+    "titulo": "Fácil, simple, intuitivo",
+    "comentario": "Una experiencia muy fácil de usar. Todo intuitivo y claro.",
+    "pfp": "adrian.jpg"
+  },
+  {
+    "usuario": "Elena",
+    "servicio": "Grupo Manatí",
+    "puntuacion": 4,
+    "titulo": "Experiencia satisfactoria",
+    "comentario": "Muy buena atención y respuesta rápida.",
+    "pfp": "elena.jpg"
+  },
+  {
+    "usuario": "Ana",
+    "servicio": "Franco Escamilla",
+    "puntuacion": 5,
+    "titulo": "Excelente servicio",
+    "comentario": "Excelente servicio, muy profesional y divertido.",
+    "pfp": "franc.jpg"
+  },
+  {
+    "usuario": "Carlos",
+    "servicio": "DJ Alex",
+    "puntuacion": 3,
+    "titulo": "Buen servicio, pero con fallos",
+    "comentario": "El servicio fue bueno, pero hubo algunos problemas técnicos.",
+    "pfp": "carlos.jpg"
+  },
+  {
+    "usuario": "Lucía",
+    "servicio": "Grupo Manatí",
+    "puntuacion": 4,
+    "titulo": "Muy buena experiencia",
+    "comentario": "Me encantó la presentación, muy profesional.",
+    "pfp": "lucia.jpg"
+  },
+  {
+    "usuario": "Javier",
+    "servicio": "CamiFlow",
+    "puntuacion": 5,
+    "titulo": "Recomendado al 100%",
+    "comentario": "Excelente cantante, muy profesional y talentosa.",
+    "pfp": "adrian.jpg"
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "nombre": "Adrián Rodríguez",
+    "correo": "adrian@example.com",
+    "contacto": 88881234,
+    "usuario": "adrianCR",
+    "contraseña": "hashed_password",
+    "rol": "contratista",
+    "pfp": "kenny.jpg"
+  },
+  {
+    "id": 2,
+    "nombre": "Elena",
+    "correo": "elena@example.com",
+    "contacto": 88882345,
+    "usuario": "elenaMusic",
+    "contraseña": "hashed_password",
+    "rol": "administrador",
+    "pfp": "elena.jpg"
+  },
+  {
+    "id": 3,
+    "nombre": "CamiFlow",
+    "correo": "camiflow@music.com",
+    "contacto": 88883456,
+    "usuario": "camiflow",
+    "contraseña": "hashed_password",
+    "rol": "oferente",
+    "pfp": "camiflow.jpg"
+  }
+]

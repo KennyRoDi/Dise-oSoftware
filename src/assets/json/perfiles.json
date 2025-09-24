@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "usuario": "CamiFlow",
+    "ubicacion": "San José",
+    "categoria": "Música",
+    "descripcion": "Cantante experimentada en diversos estilos musicales.",
+    "imagen": "camiflow.jpg"
+  },
+  {
+    "id": 2,
+    "usuario": "Grupo Manatí",
+    "ubicacion": "Cartago",
+    "categoria": "Interpretación",
+    "descripcion": "Interpretación folklórica y bailes típicos.",
+    "imagen": "grupomanati.jpg"
+  },
+  {
+    "id": 3,
+    "usuario": "DJ Alex",
+    "ubicacion": "Alajuela",
+    "categoria": "Música",
+    "descripcion": "DJ profesional para todo tipo de eventos.",
+    "imagen": "djalex.jpg"
+  },
+  {
+    "id": 4,
+    "usuario": "Franco Escamilla",
+    "ubicacion": "Heredia",
+    "categoria": "Comedia",
+    "descripcion": "Comediante con shows únicos y divertidos.",
+    "imagen": "franco.jpg"
+  },
+  {
+    "id": 5,
+    "usuario": "Magia con Estilo",
+    "ubicacion": "Guanacaste",
+    "categoria": "Magia",
+    "descripcion": "Espectáculos de magia únicos y sorprendentes.",
+    "imagen": "magia.jpg"
+  },
+  {
+    "id": 6,
+    "usuario": "Cultura Costarricense",
+    "ubicacion": "San Carlos",
+    "categoria": "Cultura",
+    "descripcion": "Conoce la rica cultura costarricense a través de sus tradiciones.",
+    "imagen": "danzatec.jpg"
+  }
+]

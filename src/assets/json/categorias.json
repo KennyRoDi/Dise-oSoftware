@@ -1,0 +1,32 @@
+[
+  {
+    "nombre": "Música",
+    "imagen": "musica.jpg",
+    "descripcion": "Conecta con los mejores músicos cerca de ti."
+  },
+  {
+    "nombre": "Interpretación",
+    "imagen": "interpretacion.jpg",
+    "descripcion": "Vive historias fantásticas en vivo y a todo color."
+  },
+  {
+    "nombre": "Comedia",
+    "imagen": "comedia.jpg",
+    "descripcion": "Pasa un buen rato con familiares y amigos."
+  },
+  {
+    "nombre": "Magia",
+    "imagen": "magia.jpg",
+    "descripcion": "Disfruta de espectáculos mágicos únicos."
+  },
+  {
+    "nombre": "Cultura",
+    "imagen": "cultura.jpg",
+    "descripcion": "Conoce más sobre la cultura costarricense."
+  },
+  {
+    "nombre": "Otros",
+    "imagen": "otros.jpg",
+    "descripcion": "Encuentra servicios variados y únicos."
+  }
+]

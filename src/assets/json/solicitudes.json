@@ -1,0 +1,50 @@
+[
+    {
+        "id": 1,
+        "cliente": "María Rodríguez",
+        "correo": "maria.rodriguez@email.com",
+        "telefono": "8888-1234",
+        "mensaje": "Hola, me gustaría contratar el show completo para una boda en diciembre.",
+        "fecha": "2025-12-15",
+        "ubicacion": "San José",
+        "servicio": "CamiFlow",
+        "paquete": "Show completo",
+        "oferente": "camiflow"
+    },
+    {
+        "id": 2,
+        "cliente": "Luis Fernández",
+        "correo": "luis.fernandez@email.com",
+        "telefono": "8999-4567",
+        "mensaje": "Evento privado pequeño, requiero el paquete básico.",
+        "fecha": "2025-07-20",
+        "ubicacion": "Cartago",
+        "servicio": "Grupo Manatí",
+        "paquete": "Presentación corta",
+        "oferente": "grupo manatí"
+    },
+    {
+        "id": 3,
+        "cliente": "Ana Gómez",
+        "correo": "ana.gomez@email.com",
+        "telefono": "8333-7890",
+        "mensaje": "¿Tienen disponibilidad para el 30 de agosto?",
+        "fecha": "2025-08-30",
+        "ubicacion": "Heredia",
+        "servicio": "Franco Escamilla",
+        "paquete": "Show completo",
+        "oferente": "franco escamilla"
+    },
+    {
+        "id": 4,
+        "cliente": "Adrian",
+        "correo": "adrian@example.com",
+        "telefono": "88881234",
+        "mensaje": "Necesito un show para una fiesta de cumpleaños el 10 de octubre.",
+        "fecha": "2025-10-10",
+        "ubicacion": "Alajuela",
+        "servicio": "CamiFlow",
+        "paquete": "Fiesta Premium",
+        "oferente": "camiflow"
+    }
+]

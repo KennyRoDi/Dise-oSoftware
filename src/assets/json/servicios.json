@@ -1,0 +1,272 @@
+[
+  {
+    "id": 1,
+    "titulo": "CamiFlow",
+    "eslogan": "Cantante experimentada en diversos estilos musicales.",
+    "quien_soy": "Soy una cantante con más de 10 años de experiencia.",
+    "que_hago": "Canto en bodas, eventos privados y conciertos.",
+    "paquetes": [
+      {
+        "nombre": "Boda estándar",
+        "descripcion": "Show en bodas",
+        "precio": 2000,
+        "detalles": [
+          "1 hora de concierto",
+          "Repertorio personalizado",
+          "Incluye equipo de sonido básico"
+        ],
+        "video_youtube": "https://www.youtube.com/watch?v=yBpqVmPX6iU"
+      },
+      {
+        "nombre": "Fiesta premium",
+        "descripcion": "Presentación en fiestas privadas",
+        "precio": 3000,
+        "detalles": [
+          "2 horas de presentación",
+          "DJ en vivo",
+          "Iluminación profesional"
+        ],
+        "video_youtube": "https://www.youtube.com/watch?v=OG4gq9fCoRE"
+      }
+    ],
+    "requisitos": [
+      "Escenario con micrófono",
+      "Conexión de sonido",
+      "Espacio para bailar",
+      "Lugar de estacionamiento"
+    ],
+    "categoria": "Música",
+    "ubicacion": "San José",
+    "imagenes": [
+      "camiflow.jpg",
+      "camiflow_presentacion.jpg",
+      "camiflow_quien.jpg",
+      "camiflow_quehago.jpg",
+      "camiflow_paquete1.jpg",
+      "camiflow_paquete2.jpg"
+    ]
+  },
+  {
+    "id": 2,
+    "titulo": "Grupo Manatí",
+    "eslogan": "Interpretación folklórica y bailes típicos.",
+    "quien_soy": "Grupo de danza folklórica costarricense.",
+    "que_hago": "Interpretaciones culturales para eventos públicos y privados.",
+    "paquetes": [
+      {
+        "nombre": "Presentación corta",
+        "descripcion": "Acto de 30 minutos",
+        "precio": 1500,
+        "detalles": [
+          "30 minutos de baile folklórico",
+          "Música tradicional",
+          "Vestuario típico"
+        ],
+        "video_youtube": "https://www.youtube.com/watch?v=tu_enlace_aqui_manati_corta"
+      },
+      {
+        "nombre": "Show completo",
+        "descripcion": "Acto de 1 hora",
+        "precio": 2500,
+        "detalles": [
+          "1 hora de show completo",
+          "Interacción con el público",
+          "Variedad de bailes"
+        ],
+        "video_youtube": "https://www.youtube.com/watch?v=tu_enlace_aqui_manati_completo"
+      }
+    ],
+    "requisitos": [
+      "Espacio amplio",
+      "Sonido ambiental"
+    ],
+    "categoria": "Interpretación",
+    "ubicacion": "Cartago",
+    "imagenes": [
+      "grupomanati.jpg",
+      "grupomanati_presentacion.jpg",
+      "grupomanati_quien.jpg",
+      "grupomanati_quehago.jpg",
+      "grupomanati_paquete1.jpg",
+      "grupomanati_paquete2.jpg"
+    ]
+  },
+  {
+    "id": 3,
+    "titulo": "DJ Alex",
+    "eslogan": "DJ profesional para todo tipo de eventos.",
+    "quien_soy": "DJ con más de 5 años de experiencia en eventos.",
+    "que_hago": "Música en vivo, mezclas personalizadas y animación.",
+    "paquetes": [
+      {
+        "nombre": "Boda",
+        "descripcion": "Música para bodas",
+        "precio": 1800,
+        "detalles": [
+          "Set de 3 horas",
+          "Playlist personalizado",
+          "Micrófono para discursos"
+        ],
+        "video_youtube": "https://www.youtube.com/watch?v=tu_enlace_aqui_djalex_boda"
+      },
+      {
+        "nombre": "Fiesta privada",
+        "descripcion": "Música animada y mezclas en vivo",
+        "precio": 2200,
+        "detalles": [
+          "Set de 4 horas",
+          "Efectos de iluminación",
+          "Animación con el público"
+        ],
+        "video_youtube": "https://www.youtube.com/watch?v=tu_enlace_aqui_djalex_fiesta"
+      }
+    ],
+    "requisitos": [
+      "Equipo de sonido",
+      "Espacio para bailar"
+    ],
+    "categoria": "Música",
+    "ubicacion": "Alajuela",
+    "imagenes": [
+      "djalex.jpg",
+      "djalex_presentacion.jpg",
+      "djalex_quien.jpg",
+      "djalex_quehago.jpg",
+      "djalex_paquete1.jpg",
+      "djalex_paquete2.jpg"
+    ]
+  },
+  {
+    "id": 4,
+    "titulo": "Franco Escamilla",
+    "eslogan": "Comediante con shows únicos y divertidos.",
+    "quien_soy": "Comediante con más de 15 años de carrera.",
+    "que_hago": "Shows de stand-up comedy y eventos privados.",
+    "paquetes": [
+      {
+        "nombre": "Show corto",
+        "descripcion": "Stand-up de 30 minutos",
+        "precio": 2700,
+        "detalles": [
+          "30 minutos de rutina",
+          "Interacción con el público"
+        ],
+        "video_youtube": "https://www.youtube.com/watch?v=tu_enlace_aqui_franco_corto"
+      },
+      {
+        "nombre": "Show completo",
+        "descripcion": "Stand-up de 1 hora",
+        "precio": 3500,
+        "detalles": [
+          "1 hora de show completo",
+          "Material exclusivo",
+          "Sesión de preguntas y respuestas"
+        ],
+        "video_youtube": "https://www.youtube.com/watch?v=tu_enlace_aqui_franco_completo"
+      }
+    ],
+    "requisitos": [
+      "Escenario iluminado",
+      "Sonido adecuado"
+    ],
+    "categoria": "Comedia",
+    "ubicacion": "Heredia",
+    "imagenes": [
+      "franco.jpg",
+      "franco_presentacion.jpg",
+      "franco_quien.jpg",
+      "franco_quehago.jpg",
+      "franco_paquete1.jpg",
+      "franco_paquete2.jpg"
+    ]
+  },
+  {
+    "id": 5,
+    "titulo": "Magia con Estilo",
+    "eslogan": "Espectáculos de magia únicos y sorprendentes.",
+    "quien_soy": "Mago profesional con más de 8 años de experiencia.",
+    "que_hago": "Shows de magia para eventos corporativos y fiestas privadas.",
+    "paquetes": [
+      {
+        "nombre": "Show corto",
+        "descripcion": "Magia de salón de 30 minutos",
+        "precio": 2100,
+        "detalles": [
+          "30 minutos de magia",
+          "Magia de cerca"
+        ],
+        "video_youtube": "https://www.youtube.com/watch?v=tu_enlace_aqui_magia_corto"
+      },
+      {
+        "nombre": "Show completo",
+        "descripcion": "Magia de escenario y efectos especiales",
+        "precio": 3200,
+        "detalles": [
+          "1 hora de show",
+          "Grandes ilusiones",
+          "Participación del público"
+        ],
+        "video_youtube": "https://www.youtube.com/watch?v=tu_enlace_aqui_magia_completo"
+      }
+    ],
+    "requisitos": [
+      "Espacio amplio",
+      "Iluminación adecuada"
+    ],
+    "categoria": "Magia",
+    "ubicacion": "Guanacaste",
+    "imagenes": [
+      "magia.jpg",
+      "magia_presentacion.jpg",
+      "magia_quien.jpg",
+      "magia_quehago.jpg",
+      "magia_paquete1.jpg",
+      "magia_paquete2.jpg"
+    ]
+  },
+  {
+    "id": 6,
+    "titulo": "Cultura Costarricense",
+    "eslogan": "Conoce la rica cultura costarricense a través de sus tradiciones.",
+    "quien_soy": "Grupo cultural dedicado a preservar las tradiciones costarricenses.",
+    "que_hago": "Presentaciones culturales, talleres y eventos educativos.",
+    "paquetes": [
+      {
+        "nombre": "Taller cultural",
+        "descripcion": "Dinámica participativa educativa",
+        "precio": 1000,
+        "detalles": [
+          "Taller de 2 horas",
+          "Actividades interactivas",
+          "Materiales incluidos"
+        ],
+        "video_youtube": "https://www.youtube.com/watch?v=tu_enlace_aqui_cultura_taller"
+      },
+      {
+        "nombre": "Presentación cultural",
+        "descripcion": "Acto típico con música y baile",
+        "precio": 2000,
+        "detalles": [
+          "Show de 45 minutos",
+          "Música en vivo",
+          "Bailes folklóricos"
+        ],
+        "video_youtube": "https://www.youtube.com/watch?v=tu_enlace_aqui_cultura_presentacion"
+      }
+    ],
+    "requisitos": [
+      "Espacio amplio",
+      "Material audiovisual"
+    ],
+    "categoria": "Cultura",
+    "ubicacion": "San Carlos",
+    "imagenes": [
+      "danzatec.jpg",
+      "danzatec_presentacion.jpg",
+      "danzatec_quien.jpg",
+      "danzatec_quehago.jpg",
+      "danzatec_paquete1.jpg",
+      "danzatec_paquete2.jpg"
+    ]
+  }
+]
