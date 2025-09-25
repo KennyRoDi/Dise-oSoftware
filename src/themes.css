@@ -13,6 +13,7 @@
   --color-text-light: #333; /* Texto oscuro */
 
   --color-text2: #e5e7eb; /* Texto general */
+  --color-solicitud: #f0f5f8;
 }
 
 /* Colores para el modo oscuro */
@@ -30,4 +31,5 @@ body.dark-mode {
   --color-background-light: #121212; /* Fondo oscuro */
   --color-text-light: #e0e0e0; /* Texto claro */
   --color-text2: #e5e7eb; /* Texto general */
+  --color-solicitud: #5f646d;
 }
