@@ -1,38 +1,33 @@
 <template>
-    <header class="flex justify-between items-center p-4 shadow bg-white relative">
-        <h1 class="text-xl font-bold z-10">ENTERTAINFLIX</h1>
-
-        <span v-if="usuario" class="absolute left-1/2 transform -translate-x-1/2 text-sm text-gray-700 font-medium">
+    <header class="header">
+        <h1 class="header-title">ENTERTAINFLIX</h1>
+        <span v-if="usuario" class="header-greeting">
             Hola, {{ usuario.nombre }}!
         </span>
-
-        <nav class="space-x-4 flex items-center z-10">
-            <RouterLink to="/chat" class="hover:underline">💬</RouterLink>
-            <RouterLink to="/" class="hover:underline">Inicio</RouterLink>
-            <RouterLink to="/categorias" class="hover:underline">Categorías</RouterLink>
-            <RouterLink to="/servicios" class="hover:underline">Servicios</RouterLink>
-
+        <nav class="header-nav">
+            <RouterLink to="/" class="nav-link">Inicio</RouterLink>
+            <RouterLink to="/categorias" class="nav-link">Categorías</RouterLink>
+            <RouterLink to="/servicios" class="nav-link">Servicios</RouterLink>
             <RouterLink v-if="usuario"
                 :to="usuario.rol === 'oferente' ? `/perfil/${usuario.usuario}` : usuario.rol === 'administrador' ? '/revision' : '/cliente'"
-                class="hover:underline">
+                class="nav-link">
                 Perfil
             </RouterLink>
-
-            <button v-if="usuario" @click="cerrarSesion"
-                class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
+            <button v-if="usuario" @click="cerrarSesion" class="logout-button">
                 Cerrar Sesión
             </button>
-
-            <RouterLink v-else to="/inicio-sesion" class="bg-black text-white px-3 py-1 rounded">
+            <RouterLink v-else to="/inicio-sesion" class="login-link">
                 Iniciar Sesión
             </RouterLink>
-        </nav>
+            <span class="theme-text">⏾</span>
+            <ThemeSwitcher /> </nav>
     </header>
 </template>
 
 <script setup>
 import { RouterLink, useRouter } from 'vue-router'
 import { useAuth } from '@/composables/useAuth.js'
+import ThemeSwitcher from './ThemeSwitcher.vue'; // <-- Importa el componente
 
 const router = useRouter()
 const { usuario, logout } = useAuth()
@@ -42,3 +37,95 @@ function cerrarSesion() {
     router.push('/')
 }
 </script>
+
+<style scoped>
+/* Estilos para el modo claro */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  background-color: var(--color-header-bg);
+  color: var(--color-header-text);
+  position: relative;
+}
+
+.header-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  z-index: 10;
+}
+
+.header-greeting {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.875rem;
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  z-index: 10;
+  gap: 1rem;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: var(--color-header-text);
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+.logout-button {
+  background-color: #ef4444; /* Rojo fijo */
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #dc2626; /* Rojo más oscuro */
+}
+
+.login-link {
+  background-color: var(--color-primary-button-bg);
+  color: var(--color-primary-button-text);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  border: none;
+  cursor: pointer;
+}
+
+/* El modo oscuro cambia automáticamente estos valores */
+body.dark-mode .header {
+  background-color: var(--color-header-bg);
+  color: var(--color-header-text);
+}
+
+body.dark-mode .nav-link {
+  color: var(--color-header-text);
+}
+
+body.dark-mode .header-title {
+  color: var(--color-header-text);
+}
+
+body.dark-mode .header-greeting {
+  color: var(--color-text);
+}
+
+body.dark-mode .login-link {
+  background-color: var(--color-primary-button-bg);
+  color: var(--color-primary-button-text);
+}
+</style>

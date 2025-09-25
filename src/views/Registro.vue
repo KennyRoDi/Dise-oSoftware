@@ -1,58 +1,57 @@
 <template>
-    <div class="bg-white text-gray-900 font-sans min-h-screen flex flex-col">
+    <div class="page font-sans min-h-screen flex flex-col">
         <Navbar />
 
         <main class="flex-grow flex items-center justify-center px-4 py-16">
-            <form @submit.prevent="registrarUsuario" class="bg-gray-50 shadow rounded p-6 space-y-4 w-full max-w-md">
+            <form @submit.prevent="registrarUsuario" class="form-card shadow rounded p-6 space-y-4 w-full max-w-md">
                 <div>
-                    <label class="block text-sm font-semibold mb-1">Nombre</label>
+                    <label class="label block text-sm font-semibold mb-1">Nombre</label>
                     <input v-model="nombre" type="text" placeholder="Tu nombre completo"
-                        class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black" />
+                        class="input" />
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold mb-1">Nombre de Usuario</label>
+                    <label class="label block text-sm font-semibold mb-1">Nombre de Usuario</label>
                     <input v-model="usuario" type="text" placeholder="usuario123"
-                        class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black" />
+                        class="input" />
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold mb-1">Correo Electrónico</label>
+                    <label class="label block text-sm font-semibold mb-1">Correo Electrónico</label>
                     <input v-model="correo" type="email" placeholder="correo@ejemplo.com"
-                        class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black" />
+                        class="input" />
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold mb-1">Contraseña</label>
+                    <label class="label block text-sm font-semibold mb-1">Contraseña</label>
                     <input v-model="password" type="password" placeholder="********"
-                        class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black" />
+                        class="input" />
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold mb-1">Confirmar Contraseña</label>
+                    <label class="label block text-sm font-semibold mb-1">Confirmar Contraseña</label>
                     <input v-model="confirmar" type="password" placeholder="********"
-                        class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black" />
+                        class="input" />
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold mb-1">Rol</label>
-                    <select v-model="rol" class="w-full border border-gray-300 rounded px-4 py-2">
+                    <label class="label block text-sm font-semibold mb-1">Rol</label>
+                    <select v-model="rol" class="input">
                         <option disabled value="">Selecciona un rol</option>
                         <option value="contratista">Contratista</option>
                         <option value="oferente">Oferente</option>
                     </select>
                 </div>
 
-                <p v-if="error" class="text-red-500 text-sm text-center">{{ error }}</p>
+                <p v-if="error" class="error text-sm text-center">{{ error }}</p>
 
-                <button type="submit" class="w-full bg-black text-white py-2 rounded hover:bg-gray-900 transition">
+                <button type="submit" class="btn-primary w-full py-2 rounded">
                     Registrarse
                 </button>
 
-                <div class="text-sm text-center text-gray-500 mt-4">
+                <div class="text-sm text-center muted mt-4">
                     ¿Ya tienes cuenta?
-                    <router-link to="/inicio-sesion" class="text-black font-medium hover:underline">Inicia
-                        sesión</router-link>
+                    <router-link to="/inicio-sesion" class="link-cta">Inicia sesión</router-link>
                 </div>
             </form>
         </main>
@@ -113,4 +112,83 @@ function registrarUsuario() {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+/* Page wrapper uses theme colors (themes.css) */
+.page {
+  background-color: var(--color-body-bg);
+  color: var(--color-text);
+  min-height: 100vh;
+  transition: background-color 180ms ease, color 180ms ease;
+  display: block;
+}
+
+/* Card / form background */
+.form-card {
+  background-color: var(--color-background-light);
+  color: var(--color-text);
+  border: 1px solid var(--color-footer-text);
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+
+/* Labels */
+.label {
+  color: var(--color-text);
+}
+
+/* Inputs & selects & textarea */
+.input {
+  background-color: var(--color-body-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-footer-text);
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease, box-shadow 150ms ease;
+}
+
+/* focus state uses primary button color for accent (adapts to theme) */
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary-button-bg);
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+}
+
+/* Primary button */
+.btn-primary {
+  background-color: var(--color-primary-button-bg);
+  color: var(--color-primary-button-text);
+  border: 1px solid transparent;
+  transition: background-color 150ms ease, color 150ms ease, opacity 120ms ease;
+  cursor: pointer;
+  text-align: center;
+}
+
+/* slight hover effect */
+.btn-primary:hover {
+  opacity: 0.95;
+}
+
+/* Link CTA color (bottom link) */
+.link-cta {
+  color: var(--color-primary-button-bg);
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 0.25rem;
+}
+
+/* muted text uses the theme "light text" variable */
+.muted {
+  color: var(--color-text-light);
+}
+
+/* error text (kept in red for clarity) */
+.error {
+  color: #ef4444;
+}
+
+/* small accessibility: ensure contrast for headings/strong text */
+h1, h2, h3, h4, label, .font-semibold {
+  color: var(--color-text);
+}
+</style>
