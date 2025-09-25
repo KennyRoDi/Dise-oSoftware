@@ -426,15 +426,12 @@ onMounted(() => {
 /* Estados de solicitud: colores suaves (fijos aquí) */
 .solicitud-pending {
   background-color: var(--color-solicitud); /* blanco neutro */
-  border: 1px solid rgba(148,163,184,0.12);
 }
 .solicitud-accepted {
   background-color: var(--color-solicitud); /* green-50 */
-  border: 1px solid #000000; /* green-200 */
 }
 .solicitud-rejected {
   background-color: var(--color-solicitud); /* red-50 */
-  border: 1px solid #000000; /* red-200 */
 }
 
 /* Badges */

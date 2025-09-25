@@ -1,6 +1,6 @@
 <template>
     <header class="header">
-        <h1 class="header-title">ENTERTAINFLIX</h1>
+        <img :src="`/assets/images/logoEF.png`" alt="Foto" class="header-logo" />
         <span v-if="usuario" class="header-greeting">
             Hola, {{ usuario.nombre }}!
         </span>
@@ -50,6 +50,11 @@ function cerrarSesion() {
   color: var(--color-header-text);
   position: relative;
 }
+.header-logo {
+  height: 4rem;
+  width: auto;
+  z-index: 10;
+}
 
 .header-title {
   font-size: 1.25rem;
@@ -62,7 +67,7 @@ function cerrarSesion() {
   left: 50%;
   transform: translateX(-50%);
   font-size: 0.875rem;
-  color: var(--color-text);
+  color: var(--color-header-text);
   font-weight: 500;
 }
 
