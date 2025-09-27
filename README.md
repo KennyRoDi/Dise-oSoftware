@@ -15,9 +15,14 @@ La plataforma garantiza un flujo de trabajo asistido, desde la gestión de perfi
   git clone https://github.com/KennyRoDi/Dise-oSoftware.git
 
   cd Dise-oSoftware
-
+```
+**Instalar dependencias**
+```bash
   npm install
+```
 
+**Ejecutar en modo desarrollo**
+```bash
   npm run dev
 
 ```
