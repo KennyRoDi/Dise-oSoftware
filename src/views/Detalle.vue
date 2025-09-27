@@ -145,7 +145,6 @@ watchEffect(() => {
 .card {
   background-color: var(--color-background-light);
   color: var(--color-text);
-  border: 1px solid var(--color-footer-text);
   border-radius: 0.5rem;
   box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;

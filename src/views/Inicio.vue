@@ -140,12 +140,13 @@ const comentarios = ref(comentariosData)
   transition: background-color 180ms ease, color 180ms ease;
 }
 
-/* Pequeños ajustes (no tocan colores definidos por theme) */
 img.rounded-md {
+  width: 100%;
+  height: 200px; /* ajusta según el alto que quieras */
   object-fit: cover;
+  border-radius: 0.375rem; /* lo mismo que rounded-md */
 }
 
-/* Evita que los enlaces hereden subrayado por default */
 a.btn-primary, a.btn-secondary {
   text-decoration: none;
 }

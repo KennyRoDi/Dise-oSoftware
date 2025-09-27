@@ -1,9 +1,6 @@
 <template>
     <header class="header">
-        <h1 class="header-title">ENTERTAINFLIX</h1>
-        <span v-if="usuario" class="header-greeting">
-            Hola, {{ usuario.nombre }}!
-        </span>
+        <img :src="`/assets/images/logoEF.png`" alt="Foto" class="header-logo" />
         <nav class="header-nav">
             <RouterLink to="/" class="nav-link">Inicio</RouterLink>
             <RouterLink to="/categorias" class="nav-link">Categorías</RouterLink>
@@ -50,6 +47,11 @@ function cerrarSesion() {
   color: var(--color-header-text);
   position: relative;
 }
+.header-logo {
+  height: 4rem;
+  width: auto;
+  z-index: 10;
+}
 
 .header-title {
   font-size: 1.25rem;
@@ -62,7 +64,7 @@ function cerrarSesion() {
   left: 50%;
   transform: translateX(-50%);
   font-size: 0.875rem;
-  color: var(--color-text);
+  color: var(--color-header-text);
   font-weight: 500;
 }
 
@@ -127,5 +129,71 @@ body.dark-mode .header-greeting {
 body.dark-mode .login-link {
   background-color: var(--color-primary-button-bg);
   color: var(--color-primary-button-text);
+}
+.header-nav {
+  display: flex;
+  align-items: center;
+  z-index: 10;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+    .header {
+        /* Volvemos a la dirección horizontal por defecto, pero con más compresión */
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 0.5rem; /* Reducimos el padding general */
+    }
+
+    .header-logo {
+        /* Solución clave: OCULTAR EL LOGO en móviles */
+        display: none; 
+    }
+
+    .header-greeting {
+        /* Ocultamos el saludo para liberar espacio, o lo dejamos pequeño y a la izquierda */
+        display: none; 
+        /* Si quieres dejarlo, usa: 
+           position: static; transform: none; font-size: 0.6rem; margin-right: 0.5rem;
+        */
+    }
+
+    .header-nav {
+        /* Permitimos envolver, aunque el objetivo sea forzar una fila */
+        flex-wrap: nowrap; /* Desactivamos el envolvimiento para forzar la fila */
+        justify-content: space-between;
+        gap: 0.5rem; /* Reducimos el espacio entre elementos */
+        width: 100%; /* Ocupa todo el ancho disponible */
+        margin-top: 0;
+    }
+
+    .nav-link,
+    .logout-button,
+    .login-link {
+        /* Hacemos los elementos mucho más pequeños */
+        font-size: 0.75rem; /* Texto pequeño, esencial para caber */
+        padding: 0.4rem 0.5rem; /* Padding muy reducido */
+        margin-bottom: 0; /* Sin margen inferior */
+        flex-shrink: 0; /* Evita que el navegador los comprima aún más */
+        /* Eliminamos el display: block y width: 100% de la solución anterior */
+    }
+    
+    .login-link {
+        /* Aseguramos que el botón de sesión también sea compacto */
+        font-size: 0.75rem;
+        padding: 0.4rem 0.5rem;
+    }
+
+    .theme-text {
+        /* Ocultamos el ícono de texto '⏾' y confiamos solo en el componente ThemeSwitcher */
+        display: none;
+    }
+
+    /* Ajuste para el ThemeSwitcher para que quede junto a los botones */
+    .header-nav > * {
+        /* Asegura que todos los hijos se alineen y sean compactos */
+        align-self: center;
+    }
 }
 </style>

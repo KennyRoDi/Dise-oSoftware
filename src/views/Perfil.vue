@@ -168,7 +168,7 @@
                     : 'msg-pending'
                 ]"
               >
-                <p class="muted leading-relaxed">{{ solicitud.mensaje }}</p>
+                <p class="muted leading-relaxed mensaje">{{ solicitud.mensaje }}</p>
               </div>
             </div>
 
@@ -425,16 +425,13 @@ onMounted(() => {
 
 /* Estados de solicitud: colores suaves (fijos aquí) */
 .solicitud-pending {
-  background-color: #ffffff; /* blanco neutro */
-  border: 1px solid rgba(148,163,184,0.12);
+  background-color: var(--color-solicitud); /* blanco neutro */
 }
 .solicitud-accepted {
-  background-color: #ecfdf5; /* green-50 */
-  border: 1px solid #bbf7d0; /* green-200 */
+  background-color: var(--color-solicitud); /* green-50 */
 }
 .solicitud-rejected {
-  background-color: #fef2f2; /* red-50 */
-  border: 1px solid #fecaca; /* red-200 */
+  background-color: var(--color-solicitud); /* red-50 */
 }
 
 /* Badges */
@@ -446,12 +443,12 @@ onMounted(() => {
   color: #1e3a8a; /* blue-800 */
 }
 .badge-accepted {
-  background-color: #d1fae5; /* green-100 */
-  color: #065f46; /* green-800 */
+  background-color: #17c76c; /* green-100 */
+  color: #ffffff; /* green-800 */
 }
 .badge-rejected {
-  background-color: #fee2e2; /* red-100 */
-  color: #991b1b; /* red-800 */
+  background-color: #e40202; /* red-100 */
+  color: #ffffff; /* red-800 */
 }
 
 /* Mensaje dentro de la solicitud */
@@ -459,10 +456,10 @@ onMounted(() => {
   background-color: #ffffff;
 }
 .msg-accepted {
-  background-color: #ecfdf5;
+  background-color: #ffffff;
 }
 .msg-rejected {
-  background-color: #fef2f2;
+  background-color: #ffffff;
 }
 
 /* Botones de acción */
@@ -495,6 +492,11 @@ onMounted(() => {
 .btn-reject:hover {
   background-color: #b91c1c; /* red-700 */
   transform: translateY(-1px);
+}
+
+.mensaje {
+  color: #000000; /* cambia la variable si prefieres otra */
+  transition: color 180ms ease;
 }
 
 /* Plain small button (restaurar) */

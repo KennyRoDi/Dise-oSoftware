@@ -1,33 +1,39 @@
 /* Colores para el modo claro por defecto */
 :root {
-  --color-header-bg: #ffffff; /* Blanco para el header */
-  --color-header-text: #1f2937; /* Gris oscuro para el texto del header */
-  --color-body-bg: #f3f4f6; /* Un gris muy claro, similar a lo que usa Tailwind por defecto */
-  --color-text: #374151; /* Texto general */
-  --color-primary-button-bg: #000000; /* Fondo del botón "Iniciar Sesión" */
-  --color-primary-button-text: #ffffff; /* Texto del botón "Iniciar Sesión" */
-  --color-footer-bg: #f3f4f6; /* gris claro */
-  --color-footer-text: #6b7280; /* gris oscuro */
-  --color-footer-heading: #1f2937; /* negro */
-  --color-background-light: #f5f5f5; /* Fondo claro */
-  --color-text-light: #333; /* Texto oscuro */
+  --color-header-bg: #4cb5a2; 
+  --color-header-text: #ffffff;
+  --color-body-bg: #e3f5ef; 
+  --color-text: #374151; 
+  --color-primary-button-bg: #000000; 
+  --color-primary-button-text: #ffffff; 
+  --color-secondary-button-bg: #001b29; 
+  --color-secondary-button-text: #001b29; 
+  --color-footer-bg: #4cb5a2; 
+  --color-footer-text: #ffffff; 
+  --color-footer-heading: #ffffff; 
+  --color-background-light: #92ddca; 
+  --color-text-light: #333; 
 
-  --color-text2: #e5e7eb; /* Texto general */
+  --color-text2: #e5e7eb; 
+  --color-solicitud: #d5f2ea;
 }
 
 /* Colores para el modo oscuro */
 body.dark-mode {
-  --color-header-bg: #1f2937; /* Gris oscuro para el header */
-  --color-header-text: #e5e7eb; /* Gris claro para el texto del header */
+  --color-header-bg: #000e14; 
+  --color-header-text: #e5e7eb; 
 
-  --color-body-bg: #32394e; /* Fondo negro */
-  --color-text: #e5e7eb; /* Texto claro */
-  --color-primary-button-bg: #ffffff; /* Fondo del botón "Iniciar Sesión" en blanco */
-  --color-primary-button-text: #000000; /* Texto del botón "Iniciar Sesión" en negro */
-  --color-footer-bg: #1f2937; /* gris oscuro */
-  --color-footer-text: #d1d5db; /* gris claro */
-  --color-footer-heading: #f3f4f6; /* gris muy claro */
-  --color-background-light: #121212; /* Fondo oscuro */
-  --color-text-light: #e0e0e0; /* Texto claro */
-  --color-text2: #e5e7eb; /* Texto general */
+  --color-body-bg: #00111a; 
+  --color-text: #e5e7eb; 
+  --color-primary-button-bg: #ffffff; 
+  --color-primary-button-text: #000000; 
+  --color-secondary-button-bg: #173646; 
+  --color-secondary-button-text: #ffffff; 
+  --color-footer-bg: #000e14; 
+  --color-footer-text: #d1d5db; 
+  --color-footer-heading: #f3f4f6; 
+  --color-background-light: #152832; 
+  --color-text-light: #e0e0e0; 
+  --color-text2: #e5e7eb; 
+  --color-solicitud: #23313f;
 }
