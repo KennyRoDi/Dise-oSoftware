@@ -1,4 +1,4 @@
-EnterteinFlix
+EntertainFlix
 
 Capturas de pantalla del sistema en funcionamiento.
 
