@@ -12,19 +12,18 @@ La plataforma garantiza un flujo de trabajo asistido, desde la gestión de perfi
 
 **Clonar el repositorio**
 ```bash
-  git clone https://github.com/KennyRoDi/Dise-oSoftware.git
+git clone https://github.com/KennyRoDi/Dise-oSoftware.git
 
-  cd Dise-oSoftware
+cd Dise-oSoftware
 ```
 **Instalar dependencias**
 ```bash
-  npm install
+npm install
 ```
 
 **Ejecutar en modo desarrollo**
 ```bash
-  npm run dev
-
+npm run dev
 ```
 
 ## Capturas de pantalla del sistema en funcionamiento.
