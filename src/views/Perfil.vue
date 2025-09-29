@@ -14,28 +14,43 @@
             </div>
           </div>
         </div>
-
         <div v-else-if="buscado" class="text-center muted mt-10">
           No se encontró ningún perfil con ese nombre.
         </div>
       </section>
 
       <section v-if="servicioAsociadoAlPerfil" class="px-4 py-12 max-w-6xl mx-auto">
-        <h2 class="text-2xl font-bold strong-text mb-6">Paquetes de {{ servicioAsociadoAlPerfil.titulo }}</h2>
-        <div class="grid md:grid-cols-3 gap-6">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold strong-text">Paquetes de {{ servicioAsociadoAlPerfil.titulo }}</h2>
+          <button @click="abrirModalParaCrear" class="btn-accept">+ Añadir Paquete</button>
+        </div>
+
+        <div v-if="servicioAsociadoAlPerfil.paquetes && servicioAsociadoAlPerfil.paquetes.length > 0" class="grid md:grid-cols-3 gap-6">
           <div
             v-for="(paq, index) in servicioAsociadoAlPerfil.paquetes"
             :key="index"
-            class="card p-4 rounded shadow"
+            class="card p-4 rounded shadow flex flex-col"
           >
             <img
-              :src="`/assets/images/${servicioAsociadoAlPerfil.imagenes[index + 4]}`"
+              :src="`/assets/images/${servicioAsociadoAlPerfil.imagenes[index % servicioAsociadoAlPerfil.imagenes.length]}`"
               class="rounded mb-2 w-full h-40 object-cover"
+              alt="Imagen del paquete"
             />
-            <h3 class="font-semibold strong-text">{{ paq.nombre }}</h3>
-            <p class="text-sm muted mt-1">{{ paq.descripcion }}</p>
-            <p class="font-bold mt-1 strong-text">$ {{ paq.precio }}</p>
+            <div class="flex-1">
+              <h3 class="font-semibold strong-text">{{ paq.nombre }}</h3>
+              <p class="text-sm muted mt-1">{{ paq.descripcion }}</p>
+              <p class="font-bold mt-1 strong-text">$ {{ paq.precio }}</p>
+            </div>
+            <div class="flex gap-2 mt-4 pt-3 border-t">
+              <button @click="abrirModalParaEditar(index)" class="btn-edit flex-1">Editar</button>
+              <button @click="eliminarPaquete(index)" class="btn-reject flex-1">Eliminar</button>
+            </div>
           </div>
+        </div>
+        
+        <div v-else class="empty-card p-8 rounded-lg muted text-center">
+            <p class="text-lg">📦 No hay paquetes para mostrar.</p>
+            <p class="text-sm mt-2">¡Añade tu primer paquete para empezar!</p>
         </div>
       </section>
 
@@ -61,128 +76,20 @@
       >
         <div class="flex justify-between items-center mb-6">
           <h2 class="text-2xl font-bold strong-text">Todas las Solicitudes ({{ solicitudesGestionadas.length }})</h2>
-
-          <button
-            @click="restaurarDatos"
-            class="btn-plain flex items-center gap-2"
-            aria-label="Restaurar solicitudes"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path
-                fill-rule="evenodd"
-                d="M4 2a1 1 0 011 1v2.121a3 3 0 010 5.758V16a1 1 0 11-2 0v-6.121a3 3 0 010-5.758V3a1 1 0 011-1zm3 4a1 1 0 011 1v.707a3 3 0 014.586 0V7a1 1 0 112 0v.707a5 5 0 00-7.071 0V7a1 1 0 011-1z"
-                clip-rule="evenodd"
-              />
-              <path
-                fill-rule="evenodd"
-                d="M13 10a1 1 0 011-1h.707a3 3 0 014.586 0V10a1 1 0 112 0v.707a5 5 0 00-7.071 0V10a1 1 0 011-1z"
-                clip-rule="evenodd"
-              />
-            </svg>
+          <button @click="restaurarDatos" class="btn-plain flex items-center gap-2" aria-label="Restaurar solicitudes">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.121a3 3 0 010 5.758V16a1 1 0 11-2 0v-6.121a3 3 0 010-5.758V3a1 1 0 011-1zm3 4a1 1 0 011 1v.707a3 3 0 014.586 0V7a1 1 0 112 0v.707a5 5 0 00-7.071 0V7a1 1 0 011-1z" clip-rule="evenodd" /><path fill-rule="evenodd" d="M13 10a1 1 0 011-1h.707a3 3 0 014.586 0V10a1 1 0 112 0v.707a5 5 0 00-7.071 0V10a1 1 0 011-1z" clip-rule="evenodd" /></svg>
             Restaurar Solicitudes
           </button>
         </div>
-
         <div v-if="solicitudesGestionadas.length > 0" class="grid gap-6">
-          <div
-            v-for="(solicitud, index) in solicitudesGestionadas"
-            :key="solicitud.id || index"
-            :class="[
-              'solicitud-card transition-shadow rounded-lg p-6',
-              solicitud.estado === 'aceptada'
-                ? 'solicitud-accepted'
-                : solicitud.estado === 'rechazada'
-                ? 'solicitud-rejected'
-                : 'solicitud-pending'
-            ]"
-          >
-            <div class="flex justify-between items-start mb-4">
-              <div>
-                <h3 class="font-bold text-xl strong-text mb-1">{{ solicitud.cliente }}</h3>
-
-                <span
-                  :class="[
-                    'badge inline-block text-sm px-3 py-1 rounded-full',
-                    solicitud.estado === 'aceptada'
-                      ? 'badge-accepted'
-                      : solicitud.estado === 'rechazada'
-                      ? 'badge-rejected'
-                      : 'badge-pending'
-                  ]"
-                >
-                  <span v-if="solicitud.estado === 'aceptada'">Aceptada - </span>
-                  <span v-else-if="solicitud.estado === 'rechazada'">Rechazada - </span>
-                  {{ solicitud.paquete }}
-                </span>
-              </div>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-4 mb-4">
-              <div class="space-y-2">
-                <div class="flex items-center gap-2">
-                  <span class="font-semibold strong-text">Email:</span>
-                  <a :href="`mailto:${solicitud.correo}`" class="link">
-                    {{ solicitud.correo }}
-                  </a>
-                </div>
-
-                <div class="flex items-center gap-2">
-                  <span class="font-semibold strong-text">Teléfono:</span>
-                  <span v-if="solicitud.telefono" class="muted">{{ solicitud.telefono }}</span>
-
-                  <a
-                    v-else-if="!solicitud.correo.includes('@') && solicitud.correo"
-                    :href="`tel:${solicitud.correo}`"
-                    class="link"
-                  >
-                    {{ solicitud.correo }}
-                  </a>
-
-                  <span v-else class="muted">N/A</span>
-                </div>
-              </div>
-
-              <div class="space-y-2">
-                <div class="flex items-center gap-2">
-                  <span class="font-semibold strong-text">Fecha:</span>
-                  <span class="muted">{{ formatearFecha(solicitud.fecha) }}</span>
-                </div>
-
-                <div class="flex items-center gap-2">
-                  <span class="font-semibold strong-text">Ubicación:</span>
-                  <span class="muted">{{ solicitud.ubicacion }}</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-4">
-              <p class="font-semibold strong-text mb-2">Mensaje:</p>
-
-              <div
-                :class="[
-                  'p-3 rounded-lg',
-                  solicitud.estado === 'aceptada'
-                    ? 'msg-accepted'
-                    : solicitud.estado === 'rechazada'
-                    ? 'msg-rejected'
-                    : 'msg-pending'
-                ]"
-              >
-                <p class="muted leading-relaxed mensaje">{{ solicitud.mensaje }}</p>
-              </div>
-            </div>
-
-            <div v-if="solicitud.estado === 'pendiente' || !solicitud.estado" class="flex gap-3 pt-4 border-t">
-              <button @click="aceptarSolicitud(solicitud.id)" class="btn-accept">Aceptar</button>
-              <button @click="rechazarSolicitud(solicitud.id)" class="btn-reject">Rechazar</button>
-            </div>
-
-            <div v-else class="flex gap-3 pt-4 border-t muted text-sm">
-              Esta solicitud ha sido {{ solicitud.estado === 'aceptada' ? 'aceptada' : 'rechazada' }}.
-            </div>
-          </div>
+        <SolicitudCard
+          v-for="solicitud in solicitudesGestionadas"
+          :key="solicitud.id"
+          :solicitud="solicitud"
+          @accept="aceptarSolicitud"
+          @reject="rechazarSolicitud"
+        />
         </div>
-
         <div v-else class="empty-card p-8 rounded-lg muted text-center">
           <p class="text-lg">📭 No se han recibido solicitudes aún.</p>
           <p class="text-sm mt-2">Las nuevas solicitudes aparecerán aquí automáticamente.</p>
@@ -191,32 +98,48 @@
     </main>
 
     <Footer />
+
+    <PackageModal
+      v-if="mostrarModal"
+      :paquete="paqueteEditable"
+      :is-editing="editandoIndex !== null"
+      @close="cerrarModal"
+      @save="guardarPaquete"
+    />
   </div>
 </template>
 
 <script setup>
-/* (mantuve exactamente tu lógica de script) */
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
+import PackageModal from '@/components/PackageModal.vue'
+
+// --- IMPORTACIÓN DE DATOS ---
 import perfilesData from '@/assets/json/perfiles.json'
 import serviciosData from '@/assets/json/servicios.json'
 import comentariosData from '@/assets/json/comentarios.json'
 import solicitudesData from '@/assets/json/solicitudes.json'
+import SolicitudCard from '@/components/SolicitudCard.vue'
 
+// --- ESTADO Y REFERENCIAS ---
 const route = useRoute()
-const nombreBusqueda = ref('')
 const perfil = ref(null)
 const buscado = ref(false)
-
-const servicios = ref(serviciosData)
+const nombreBusqueda = ref('')
+const servicios = ref([])
 const comentarios = ref(comentariosData)
-
 const todasLasSolicitudes = ref([])
 
+// --- ESTADO PARA EL MODAL ---
+const mostrarModal = ref(false)
+const paqueteEditable = ref({ nombre: '', descripcion: '', precio: null })
+const editandoIndex = ref(null) // null para crear, un número para editar
+
+// --- PROPIEDADES COMPUTADAS ---
 const servicioAsociadoAlPerfil = computed(() => {
-  if (!perfil.value) return null
+  if (!perfil.value || !servicios.value) return null
   return servicios.value.find(s => s.titulo.toLowerCase() === perfil.value.usuario.toLowerCase()) || null
 })
 
@@ -232,15 +155,7 @@ const solicitudesGestionadas = computed(() => {
     .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
 })
 
-function formatearFecha(fecha) {
-  const opciones = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    weekday: 'long'
-  }
-  return new Date(fecha).toLocaleDateString('es-ES', opciones)
-}
+//-----------
 
 function actualizarEstadoSolicitud(solicitudId, nuevoEstado) {
   const solicitudIndex = todasLasSolicitudes.value.findIndex(s => s.id === solicitudId)
@@ -253,23 +168,10 @@ function actualizarEstadoSolicitud(solicitudId, nuevoEstado) {
 function aceptarSolicitud(solicitudId) {
   const solicitud = todasLasSolicitudes.value.find(s => s.id === solicitudId)
   if (!solicitud) return
-
   actualizarEstadoSolicitud(solicitudId, 'aceptada')
-
+  
   const asunto = `¡Su solicitud ha sido aceptada! - ${solicitud.paquete}`
-  const cuerpo = `Hola ${solicitud.cliente},
-
-¡Nos complace informarle que su solicitud para el paquete "${solicitud.paquete}" ha sido ACEPTADA!
-
-Estamos muy emocionados de trabajar con usted para su evento del ${formatearFecha(solicitud.fecha)} en ${solicitud.ubicacion}.
-
-Nos pondremos en contacto con usted muy pronto para coordinar los próximos pasos y asegurar que todo salga perfecto.
-
-Si tiene alguna pregunta, no dude en responder a este correo.
-
-Saludos cordiales,
-${perfil.value?.usuario || 'El equipo'}`
-
+  const cuerpo = `Hola ${solicitud.cliente},\n\n¡Nos complace informarle que su solicitud para el paquete "${solicitud.paquete}" ha sido ACEPTADA!...\n\nSaludos cordiales,\n${perfil.value?.usuario || 'El equipo'}`
   const mailtoLink = `mailto:${solicitud.correo}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`
   window.location.href = mailtoLink
 }
@@ -277,22 +179,12 @@ ${perfil.value?.usuario || 'El equipo'}`
 function rechazarSolicitud(solicitudId) {
   const solicitud = todasLasSolicitudes.value.find(s => s.id === solicitudId)
   if (!solicitud) return
-
+  
   const asunto = `Información sobre su solicitud - ${solicitud.paquete}`
-  const cuerpo = `Hola ${solicitud.cliente},
-
-Lamentamos informarle que no podremos aceptar su solicitud para el evento del ${formatearFecha(solicitud.fecha)} en ${solicitud.ubicacion} para el paquete "${solicitud.paquete}".
-
-Las razones pueden ser varias, como la disponibilidad en la fecha solicitada o limitaciones de capacidad.
-
-Agradecemos su interés en nuestros servicios y esperamos poder atenderle en otra ocasión. Si tiene alguna otra pregunta o desea explorar otras opciones, no dude en contactarnos.
-
-Saludos cordiales,
-${perfil.value?.usuario || 'El equipo'}`
-
+  const cuerpo = `Hola ${solicitud.cliente},\n\nLamentamos informarle que no podremos aceptar su solicitud...\n\nSaludos cordiales,\n${perfil.value?.usuario || 'El equipo'}`
   const mailtoLink = `mailto:${solicitud.correo}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`
   window.location.href = mailtoLink
-
+  
   actualizarEstadoSolicitud(solicitudId, 'rechazada')
 }
 
@@ -303,14 +195,10 @@ function buscarPerfil() {
 }
 
 function restaurarDatos() {
-  if (
-    confirm(
-      '¿Estás seguro de que quieres restaurar todas las solicitudes a su estado inicial? Esto borrará todos los cambios guardados (aceptadas/rechazadas/nuevas).'
-    )
-  ) {
+  if (confirm('¿Estás seguro de que quieres restaurar todas las solicitudes a su estado inicial?')) {
     localStorage.removeItem('todasLasSolicitudes')
-    localStorage.removeItem('nuevasSolicitudes')
-
+    localStorage.removeItem('nuevasSolicitudes') // Limpieza de clave antigua si existe
+    
     const initialSolicitudes = solicitudesData.map(sol => ({
       ...sol,
       estado: 'pendiente',
@@ -318,13 +206,65 @@ function restaurarDatos() {
     }))
     todasLasSolicitudes.value = initialSolicitudes
     localStorage.setItem('todasLasSolicitudes', JSON.stringify(todasLasSolicitudes.value))
-    alert('Las solicitudes han sido restauradas exitosamente desde el JSON original.')
+    alert('Las solicitudes han sido restauradas exitosamente.')
   }
 }
 
+// --- FUNCIONES CRUD PARA PAQUETES (interactúan con el modal) ---
+function guardarServiciosEnStorage() {
+  localStorage.setItem('serviciosData', JSON.stringify(servicios.value))
+}
+
+function abrirModalParaCrear() {
+  editandoIndex.value = null
+  paqueteEditable.value = { nombre: '', descripcion: '', precio: 0 }
+  mostrarModal.value = true
+}
+
+function abrirModalParaEditar(index) {
+  editandoIndex.value = index
+  paqueteEditable.value = { ...servicioAsociadoAlPerfil.value.paquetes[index] }
+  mostrarModal.value = true
+}
+
+function cerrarModal() {
+  mostrarModal.value = false
+}
+
+function guardarPaquete(paqueteActualizado) {
+  if (!servicioAsociadoAlPerfil.value) return;
+  const indiceServicioActual = servicios.value.findIndex(s => s.titulo.toLowerCase() === perfil.value.usuario.toLowerCase());
+  if (indiceServicioActual === -1) return;
+
+  if (editandoIndex.value === null) {
+    // CREAR
+    if (!servicios.value[indiceServicioActual].paquetes) {
+      servicios.value[indiceServicioActual].paquetes = [];
+    }
+    servicios.value[indiceServicioActual].paquetes.push(paqueteActualizado);
+  } else {
+    // ACTUALIZAR
+    servicios.value[indiceServicioActual].paquetes[editandoIndex.value] = paqueteActualizado;
+  }
+  
+  guardarServiciosEnStorage()
+  cerrarModal()
+}
+
+function eliminarPaquete(index) {
+  if (confirm('¿Estás seguro de que quieres eliminar este paquete?')) {
+    if (!servicioAsociadoAlPerfil.value) return;
+    const indiceServicioActual = servicios.value.findIndex(s => s.titulo.toLowerCase() === perfil.value.usuario.toLowerCase());
+    if (indiceServicioActual === -1) return;
+    servicios.value[indiceServicioActual].paquetes.splice(index, 1);
+    guardarServiciosEnStorage()
+  }
+}
+
+// --- HOOKS DE CICLO DE VIDA ---
 watch(
   () => route.params.usuario,
-  newUsuario => {
+  (newUsuario) => {
     if (newUsuario) {
       nombreBusqueda.value = newUsuario
       buscarPerfil()
@@ -334,11 +274,17 @@ watch(
 )
 
 onMounted(() => {
+  // Carga de servicios 
+  const serviciosGuardados = localStorage.getItem('serviciosData')
+  servicios.value = serviciosGuardados ? JSON.parse(serviciosGuardados) : JSON.parse(JSON.stringify(serviciosData));
+
+  // Carga de perfil si no se hizo por el watcher
   if (!perfil.value && route.params.usuario) {
     nombreBusqueda.value = route.params.usuario
     buscarPerfil()
   }
 
+  // Carga de solicitudes (desde localStorage o JSON)
   const storedSolicitudes = localStorage.getItem('todasLasSolicitudes')
   if (storedSolicitudes) {
     todasLasSolicitudes.value = JSON.parse(storedSolicitudes)
@@ -348,27 +294,11 @@ onMounted(() => {
       estado: 'pendiente',
       id: sol.id || Date.now() + Math.random().toString(36).substr(2, 9)
     }))
-
-    const oldNewSolicitudes = JSON.parse(localStorage.getItem('nuevasSolicitudes') || '[]')
-    const combinedInitial = [...initialJsonSolicitudes]
-
-    oldNewSolicitudes.forEach(newSol => {
-      if (!combinedInitial.some(existingSol => existingSol.id === newSol.id)) {
-        combinedInitial.push({
-          ...newSol,
-          estado: newSol.estado || 'pendiente',
-          id: newSol.id || Date.now() + Math.random().toString(36).substr(2, 9)
-        })
-      }
-    })
-
-    todasLasSolicitudes.value = combinedInitial
+    todasLasSolicitudes.value = initialJsonSolicitudes;
     localStorage.setItem('todasLasSolicitudes', JSON.stringify(todasLasSolicitudes.value))
-    localStorage.removeItem('nuevasSolicitudes')
   }
 })
 </script>
-
 <style scoped>
 /* Page wrapper uses your theme variables (no cambios en themes.css) */
 .page {
@@ -418,50 +348,6 @@ onMounted(() => {
   text-decoration: underline;
 }
 
-/* Solicitud card base */
-.solicitud-card {
-  border-radius: 0.75rem;
-}
-
-/* Estados de solicitud: colores suaves (fijos aquí) */
-.solicitud-pending {
-  background-color: var(--color-solicitud); /* blanco neutro */
-}
-.solicitud-accepted {
-  background-color: var(--color-solicitud); /* green-50 */
-}
-.solicitud-rejected {
-  background-color: var(--color-solicitud); /* red-50 */
-}
-
-/* Badges */
-.badge {
-  font-weight: 600;
-}
-.badge-pending {
-  background-color: #eff6ff; /* blue-100 */
-  color: #1e3a8a; /* blue-800 */
-}
-.badge-accepted {
-  background-color: #17c76c; /* green-100 */
-  color: #ffffff; /* green-800 */
-}
-.badge-rejected {
-  background-color: #e40202; /* red-100 */
-  color: #ffffff; /* red-800 */
-}
-
-/* Mensaje dentro de la solicitud */
-.msg-pending {
-  background-color: #ffffff;
-}
-.msg-accepted {
-  background-color: #ffffff;
-}
-.msg-rejected {
-  background-color: #ffffff;
-}
-
 /* Botones de acción */
 .btn-accept,
 .btn-reject,
@@ -494,11 +380,6 @@ onMounted(() => {
   transform: translateY(-1px);
 }
 
-.mensaje {
-  color: #000000; /* cambia la variable si prefieres otra */
-  transition: color 180ms ease;
-}
-
 /* Plain small button (restaurar) */
 .btn-plain {
   background-color: var(--color-background-light);
@@ -525,5 +406,21 @@ img.object-cover {
 /* Pequeñas utilidades */
 .transition-shadow {
   transition: box-shadow 160ms ease, transform 160ms ease;
+}
+
+/* Botón de editar */
+.btn-edit {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: var(--color-primary-button-bg);
+  color: var(--color-primary-button-text);
+  transition: all 120ms ease;
+}
+.btn-edit:hover {
+  background-color: var(--color-primary-button-text);
+  color: var(--color-primary-button-bg);
+  transform: translateY(-1px);
 }
 </style>

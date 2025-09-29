@@ -39,8 +39,8 @@ watch(isDarkMode, () => {
 .theme-switcher {
   position: relative;
   display: inline-block;
-  width: 60px; /* Ancho total del switcher */
-  height: 34px; /* Altura total del switcher */
+  width: 55px; /* Ancho total del switcher */
+  height: 30px; /* Altura total del switcher */
 }
 
 /* Oculta el checkbox nativo */
@@ -67,8 +67,8 @@ watch(isDarkMode, () => {
 .slider:before {
   position: absolute;
   content: "";
-  height: 26px;
-  width: 26px;
+  height: 23px;
+  width: 23px;
   left: 4px;
   bottom: 4px;
   background-color: var(--color-header-bg);
