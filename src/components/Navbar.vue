@@ -2,198 +2,222 @@
     <header class="header">
         <img :src="`/assets/images/logoEF.png`" alt="Foto" class="header-logo" />
         <nav class="header-nav">
-            <RouterLink to="/" class="nav-link">Inicio</RouterLink>
-            <RouterLink to="/categorias" class="nav-link">Categorías</RouterLink>
-            <RouterLink to="/servicios" class="nav-link">Servicios</RouterLink>
-            <RouterLink v-if="usuario"
-                :to="usuario.rol === 'oferente' ? `/perfil/${usuario.usuario}` : usuario.rol === 'administrador' ? '/revision' : '/cliente'"
-                class="nav-link">
-                Perfil
-            </RouterLink>
-            <button v-if="usuario" @click="cerrarSesion" class="logout-button">
-                Cerrar Sesión
-            </button>
-            <RouterLink v-else to="/inicio-sesion" class="login-link">
-                Iniciar Sesión
-            </RouterLink>
-            <span class="theme-text">⏾</span>
-            <ThemeSwitcher /> </nav>
+            <div class="menu-container" ref="menuContainerRef">
+                <button @click="toggleMenu" class="menu-button">
+                    Menú
+                </button>
+
+                <div v-if="isMenuOpen" class="dropdown-menu">
+                    <RouterLink to="/" class="dropdown-link" @click="closeMenu">Inicio</RouterLink>
+                    <RouterLink to="/categorias" class="dropdown-link" @click="closeMenu">Categorías</RouterLink>
+                    <RouterLink to="/servicios" class="dropdown-link" @click="closeMenu">Servicios</RouterLink>
+                    <RouterLink v-if="usuario"
+                        :to="usuario.rol === 'oferente' ? `/perfil/${usuario.usuario}` : usuario.rol === 'administrador' ? '/revision' : '/cliente'"
+                        class="dropdown-link" @click="closeMenu">
+                        Perfil
+                    </RouterLink>
+                    
+                    <hr class="dropdown-divider" />
+
+                    <RouterLink v-if="!usuario" to="/inicio-sesion" class="dropdown-link" @click="closeMenu">
+                        Iniciar Sesión
+                    </RouterLink>
+                    <button v-else @click="cerrarSesion" class="dropdown-logout-button">
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+
+            <ThemeSwitcher />
+        </nav>
     </header>
 </template>
 
 <script setup>
+import { ref, onMounted, onUnmounted } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { useAuth } from '@/composables/useAuth.js'
-import ThemeSwitcher from './ThemeSwitcher.vue'; // <-- Importa el componente
+import ThemeSwitcher from './ThemeSwitcher.vue'
 
 const router = useRouter()
 const { usuario, logout } = useAuth()
 
+// --- Lógica para el menú desplegable ---
+const isMenuOpen = ref(false)
+const menuContainerRef = ref(null)
+
+function toggleMenu() {
+    isMenuOpen.value = !isMenuOpen.value
+}
+
+function closeMenu() {
+    isMenuOpen.value = false
+}
+
+// Cierra el menú si se hace clic fuera de él
+const handleClickOutside = (event) => {
+    if (menuContainerRef.value && !menuContainerRef.value.contains(event.target)) {
+        closeMenu()
+    }
+}
+
+onMounted(() => {
+    document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+    document.removeEventListener('click', handleClickOutside)
+})
+
 function cerrarSesion() {
     logout()
     router.push('/')
+    closeMenu() 
 }
 </script>
 
 <style scoped>
-/* Estilos para el modo claro */
+/* Estilos generales del header */
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  background-color: var(--color-header-bg);
-  color: var(--color-header-text);
-  position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    background-color: var(--color-header-bg);
+    color: var(--color-header-text);
 }
+
 .header-logo {
-  height: 4rem;
-  width: auto;
-  z-index: 10;
-}
-
-.header-title {
-  font-size: 1.25rem;
-  font-weight: bold;
-  z-index: 10;
-}
-
-.header-greeting {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.875rem;
-  color: var(--color-header-text);
-  font-weight: 500;
+    height: 4rem;
+    width: auto;
 }
 
 .header-nav {
-  display: flex;
-  align-items: center;
-  z-index: 10;
-  gap: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
-.nav-link {
-  text-decoration: none;
-  color: var(--color-header-text);
-  transition: color 0.3s ease;
+.menu-container {
+    position: relative;
+    display: inline-block;
 }
 
-.nav-link:hover {
-  text-decoration: underline;
+.menu-button {
+    background-color: var(--color-primary-button-bg);
+    color: var(--color-primary-button-text);
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-.logout-button {
-  background-color: #ef4444; /* Rojo fijo */
-  color: white;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.25rem;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+.menu-button:hover {
+    background-color: var(--color-primary-button-text);
+    color: var(--color-primary-button-bg);
 }
 
-.logout-button:hover {
-  background-color: #dc2626; /* Rojo más oscuro */
+/* Estilos del menú desplegable */
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    background-color: var(--color-header-bg);
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    border-radius: 0.375rem;
+    padding: 0.5rem 0;
+    z-index: 50;
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
 }
 
-.login-link {
-  background-color: var(--color-primary-button-bg);
-  color: var(--color-primary-button-text);
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.25rem;
-  border: none;
-  cursor: pointer;
+body.dark-mode .dropdown-menu {
+    border-color: #4a5568;
 }
 
-/* El modo oscuro cambia automáticamente estos valores */
-body.dark-mode .header {
-  background-color: var(--color-header-bg);
-  color: var(--color-header-text);
+/* Estilo para los enlaces normales del dropdown */
+.dropdown-link {
+    text-decoration: none;
+    color: var(--color-header-text);
+    padding: 0.75rem 1.5rem;
+    display: block;
+    transition: background-color 0.2s ease;
+    text-align: left;
+    background: none;
+    border: none;
+    width: 100%;
+    font-size: 1rem;
+}
+.dropdown-menu {
+        /* Se mantiene la alineación a la izquierda, que ya está corregida */
+        right: 0;
+        left: auto;
+    }
+
+.dropdown-link:hover {
+    background-color: rgba(66, 65, 65, 0.534);
 }
 
-body.dark-mode .nav-link {
-  color: var(--color-header-text);
+body.dark-mode .dropdown-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
-body.dark-mode .header-title {
-  color: var(--color-header-text);
+/* Estilo para la línea divisora */
+.dropdown-divider {
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    margin: 0.5rem 0;
 }
 
-body.dark-mode .header-greeting {
-  color: var(--color-text);
+body.dark-mode .dropdown-divider {
+    border-top-color: #4a5568;
 }
 
-body.dark-mode .login-link {
-  background-color: var(--color-primary-button-bg);
-  color: var(--color-primary-button-text);
-}
-.header-nav {
-  display: flex;
-  align-items: center;
-  z-index: 10;
-  gap: 1rem;
+/* Estilo específico para el botón "Cerrar Sesión" dentro del menú */
+.dropdown-logout-button {
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    display: block;
+    transition: background-color 0.2s ease;
+    text-align: left;
+    background: none;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    font-size: 1rem; 
+
+    /* Estilo distintivo */
+    color: #ef4444; /* Rojo para indicar una acción destructiva */
 }
 
+.dropdown-logout-button:hover {
+    background-color: rgba(239, 68, 68, 0.1); /* Fondo rojo muy claro al pasar el mouse */
+}
+
+/*resposivos*/
 @media (max-width: 768px) {
-    .header {
-        /* Volvemos a la dirección horizontal por defecto, pero con más compresión */
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.75rem 0.5rem; /* Reducimos el padding general */
-    }
-
     .header-logo {
-        /* Solución clave: OCULTAR EL LOGO en móviles */
-        display: none; 
-    }
-
-    .header-greeting {
-        /* Ocultamos el saludo para liberar espacio, o lo dejamos pequeño y a la izquierda */
-        display: none; 
-        /* Si quieres dejarlo, usa: 
-           position: static; transform: none; font-size: 0.6rem; margin-right: 0.5rem;
-        */
-    }
-
-    .header-nav {
-        /* Permitimos envolver, aunque el objetivo sea forzar una fila */
-        flex-wrap: nowrap; /* Desactivamos el envolvimiento para forzar la fila */
-        justify-content: space-between;
-        gap: 0.5rem; /* Reducimos el espacio entre elementos */
-        width: 100%; /* Ocupa todo el ancho disponible */
-        margin-top: 0;
-    }
-
-    .nav-link,
-    .logout-button,
-    .login-link {
-        /* Hacemos los elementos mucho más pequeños */
-        font-size: 0.75rem; /* Texto pequeño, esencial para caber */
-        padding: 0.4rem 0.5rem; /* Padding muy reducido */
-        margin-bottom: 0; /* Sin margen inferior */
-        flex-shrink: 0; /* Evita que el navegador los comprima aún más */
-        /* Eliminamos el display: block y width: 100% de la solución anterior */
-    }
-    
-    .login-link {
-        /* Aseguramos que el botón de sesión también sea compacto */
-        font-size: 0.75rem;
-        padding: 0.4rem 0.5rem;
-    }
-
-    .theme-text {
-        /* Ocultamos el ícono de texto '⏾' y confiamos solo en el componente ThemeSwitcher */
         display: none;
     }
 
-    /* Ajuste para el ThemeSwitcher para que quede junto a los botones */
-    .header-nav > * {
-        /* Asegura que todos los hijos se alineen y sean compactos */
-        align-self: center;
+    .header-nav {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .menu-button {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
+    }
+
+    .dropdown-menu {
+        /* Se mantiene la alineación a la izquierda, que ya está corregida */
+        left: 0;
+        right: auto;
     }
 }
 </style>
