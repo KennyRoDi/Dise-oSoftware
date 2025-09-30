@@ -35,12 +35,12 @@ watch(isDarkMode, () => {
 </script>
 
 <style scoped>
-/* Estilos del contenedor */
+/*estilo del contenedor */
 .theme-switcher {
   position: relative;
   display: inline-block;
-  width: 55px; /* Ancho total del switcher */
-  height: 30px; /* Altura total del switcher */
+  width: 55px; 
+  height: 30px; 
 }
 
 /* Oculta el checkbox nativo */
@@ -58,9 +58,9 @@ watch(isDarkMode, () => {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc; /* Fondo del switcher en modo claro */
+  background-color: #ccc; 
   transition: .4s;
-  border-radius: 34px; /* Forma redondeada del slider */
+  border-radius: 34px;
 }
 
 /* Círculo que se mueve dentro del slider */
@@ -73,7 +73,7 @@ watch(isDarkMode, () => {
   bottom: 4px;
   background-color: var(--color-header-bg);
   transition: .4s;
-  border-radius: 50%; /* Forma de círculo */
+  border-radius: 50%;
 }
 
 /* Color del slider cuando el checkbox está activado (modo oscuro) */

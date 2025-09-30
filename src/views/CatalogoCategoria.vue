@@ -28,14 +28,11 @@ import { useRoute } from 'vue-router';
 import Navbar from '@/components/Navbar.vue';
 import Footer from '@/components/Footer.vue';
 import serviciosData from '@/assets/json/servicios.json';
-
-// --- 1. IMPORTAMOS EL NUEVO COMPONENTE ---
 import ServiceCard from '@/components/ServiceCard.vue';
 
 const route = useRoute();
 const categoriaSeleccionada = route.params.nombre;
 
-// La lógica del script no necesita más cambios
 const serviciosFiltrados = computed(() => {
   return serviciosData.filter(s => s.categoria === categoriaSeleccionada);
 });

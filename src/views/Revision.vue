@@ -63,7 +63,7 @@ import { RouterLink } from 'vue-router'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import previstaData from '@/assets/json/prevista.json'
-import serviciosData from '@/assets/json/servicios.json' // Mantener para referencia de estructura
+import serviciosData from '@/assets/json/servicios.json'
 
 // Ref para los servicios que están pendientes de revisión (se cargarán desde localStorage o prevista.json)
 const serviciosPendientes = ref([]);
@@ -252,13 +252,13 @@ onMounted(() => {
 
 /* Accept / Reject buttons (text buttons) */
 .accept-btn {
-  color: #16a34a; /* verde (mantener legible) */
+  color: #16a34a;
   background: transparent;
   border: none;
   cursor: pointer;
 }
 .reject-btn {
-  color: #dc2626; /* rojo */
+  color: #dc2626;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -267,7 +267,7 @@ onMounted(() => {
 /* Badge aprobado */
 .badge-approved {
   display: inline-block;
-  background-color: rgba(57, 194, 15, 0.849); /* verde claro translúcido */
+  background-color: rgba(57, 194, 15, 0.849); 
   color: #ffffff;
   font-size: 0.75rem;
   padding: 0.25rem 0.5rem;

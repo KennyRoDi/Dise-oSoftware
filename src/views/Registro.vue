@@ -106,8 +106,6 @@ function registrarUsuario() {
 
     usuarios.value.push(nuevoUsuario) // simulación en memoria
 
-    // Aquí podrías usar localStorage si deseas persistir entre sesiones
-
     router.push('/inicio-sesion')
 }
 </script>

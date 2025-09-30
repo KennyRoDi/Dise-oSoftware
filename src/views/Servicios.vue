@@ -88,12 +88,9 @@ import Navbar from '@/components/Navbar.vue';
 import Footer from '@/components/Footer.vue';
 import serviciosData from '@/assets/json/servicios.json';
 import categoriasData from '@/assets/json/categorias.json';
-
-// 1. IMPORTAMOS EL NUEVO COMPONENTE
 import ServiceCard from '@/components/ServiceCard.vue';
 
-// 2. TODA LA LÓGICA DE ESTADO Y FILTRADO PERMANECE EXACTAMENTE IGUAL
-const servicios = ref([]); // Contendrá los datos combinados
+const servicios = ref([]); 
 const categorias = ref(categoriasData);
 const showFilters = ref(false);
 const showSearch = ref(false);
@@ -115,7 +112,7 @@ const serviciosFiltrados = computed(() => {
     const coincideBusqueda = tituloLower.includes(searchQuery.value.toLowerCase());
     const coincideCategoria = filtroCategoria.value ? s.categoria === filtroCategoria.value : true;
     const coincideUbicacion = filtroUbicacion.value ? ubicacionLower === filtroUbicacion.value.toLowerCase() : true;
-    const coincidePrecio = s.paquetes && Array.isArray(s.paquetes) ? s.paquetes.some(p => p.precio <= precioMax.value) : true; // Se ajusta para ser más permisivo si no hay paquetes
+    const coincidePrecio = s.paquetes && Array.isArray(s.paquetes) ? s.paquetes.some(p => p.precio <= precioMax.value) : true; 
 
     return coincideBusqueda && coincideCategoria && coincideUbicacion && coincidePrecio;
   });
@@ -153,7 +150,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Estilos generales de la página y los filtros */
 .page {
   background-color: var(--color-body-bg);
   color: var(--color-text);
