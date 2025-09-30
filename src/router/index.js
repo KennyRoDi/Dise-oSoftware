@@ -14,6 +14,7 @@ import AgendarPrevista from '../views/AgendarPrevista.vue'
 import CatalogoCategoria from '../views/CatalogoCategoria.vue'
 import Cliente from '../views/Cliente.vue'
 import Revision from '../views/Revision.vue'
+import Publicar from '../views/Publicar.vue'
 
 const routes =
     [
@@ -31,7 +32,8 @@ const routes =
         { path: '/agendar-prevista/:id', name: 'AgendarPrevista', component: AgendarPrevista }, 
         { path: '/catalogo-categoria/:nombre', name: 'CatalogoCategoria', component: CatalogoCategoria },
         { path: '/cliente', name: 'Cliente', component: Cliente },
-        { path: '/revision', name: 'Revision', component: Revision }
+        { path: '/revision', name: 'Revision', component: Revision },
+        { path: '/publicar', name: 'Publicar', component: Publicar }
     ]
 
 export default createRouter({

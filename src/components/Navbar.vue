@@ -11,9 +11,20 @@
                     <RouterLink to="/" class="dropdown-link" @click="closeMenu">Inicio</RouterLink>
                     <RouterLink to="/categorias" class="dropdown-link" @click="closeMenu">Categorías</RouterLink>
                     <RouterLink to="/servicios" class="dropdown-link" @click="closeMenu">Servicios</RouterLink>
-                    <RouterLink v-if="usuario"
+                    
+                    <RouterLink 
+                        v-if="usuario && usuario.rol === 'oferente'" 
+                        to="/publicar" 
+                        class="dropdown-link" 
+                        @click="closeMenu">
+                        Publicar
+                    </RouterLink>
+                    
+                    <RouterLink 
+                        v-if="usuario"
                         :to="usuario.rol === 'oferente' ? `/perfil/${usuario.usuario}` : usuario.rol === 'administrador' ? '/revision' : '/cliente'"
-                        class="dropdown-link" @click="closeMenu">
+                        class="dropdown-link" 
+                        @click="closeMenu">
                         Perfil
                     </RouterLink>
                     
@@ -42,7 +53,6 @@ import ThemeSwitcher from './ThemeSwitcher.vue'
 const router = useRouter()
 const { usuario, logout } = useAuth()
 
-// --- Lógica para el menú desplegable ---
 const isMenuOpen = ref(false)
 const menuContainerRef = ref(null)
 
@@ -54,7 +64,6 @@ function closeMenu() {
     isMenuOpen.value = false
 }
 
-// Cierra el menú si se hace clic fuera de él
 const handleClickOutside = (event) => {
     if (menuContainerRef.value && !menuContainerRef.value.contains(event.target)) {
         closeMenu()
@@ -77,7 +86,6 @@ function cerrarSesion() {
 </script>
 
 <style scoped>
-/* Estilos generales del header */
 .header {
     display: flex;
     justify-content: space-between;
@@ -119,7 +127,6 @@ function cerrarSesion() {
     color: var(--color-primary-button-bg);
 }
 
-/* Estilos del menú desplegable */
 .dropdown-menu {
     position: absolute;
     top: calc(100% + 5px);
@@ -139,7 +146,6 @@ body.dark-mode .dropdown-menu {
     border-color: #4a5568;
 }
 
-/* Estilo para los enlaces normales del dropdown */
 .dropdown-link {
     text-decoration: none;
     color: var(--color-header-text);
@@ -153,7 +159,6 @@ body.dark-mode .dropdown-menu {
     font-size: 1rem;
 }
 .dropdown-menu {
-        /* Se mantiene la alineación a la izquierda, que ya está corregida */
         right: 0;
         left: auto;
     }
@@ -166,7 +171,6 @@ body.dark-mode .dropdown-link:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Estilo para la línea divisora */
 .dropdown-divider {
     border: none;
     border-top: 1px solid #e2e8f0;
@@ -177,7 +181,6 @@ body.dark-mode .dropdown-divider {
     border-top-color: #4a5568;
 }
 
-/* Estilo específico para el botón "Cerrar Sesión" dentro del menú */
 .dropdown-logout-button {
     text-decoration: none;
     padding: 0.75rem 1.5rem;
@@ -189,16 +192,13 @@ body.dark-mode .dropdown-divider {
     width: 100%;
     cursor: pointer;
     font-size: 1rem; 
-
-    /* Estilo distintivo */
-    color: #ef4444; /* Rojo para indicar una acción destructiva */
+    color: #ef4444; 
 }
 
 .dropdown-logout-button:hover {
-    background-color: rgba(239, 68, 68, 0.1); /* Fondo rojo muy claro al pasar el mouse */
+    background-color: rgba(239, 68, 68, 0.1); 
 }
 
-/*resposivos*/
 @media (max-width: 768px) {
     .header-logo {
         display: none;
@@ -215,7 +215,6 @@ body.dark-mode .dropdown-divider {
     }
 
     .dropdown-menu {
-        /* Se mantiene la alineación a la izquierda, que ya está corregida */
         left: 0;
         right: auto;
     }

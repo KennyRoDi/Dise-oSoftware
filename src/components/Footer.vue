@@ -15,8 +15,15 @@
             <a href="https://www.facebook.com/yourpage" target="_blank" aria-label="Facebook">
               <img src="https://img.icons8.com/fluent/48/000000/facebook-new.png" alt="Facebook" class="h-8 w-8" />
             </a>
-            </div>
+            <a href="https://twitter.com/yourpage" target="_blank" aria-label="Twitter">
+              <img src="https://img.icons8.com/fluent/48/000000/twitter.png" alt="Twitter" class="h-8 w-8" />
+            </a>
+            <a href="https://www.linkedin.com/in/yourpage" target="_blank" aria-label="LinkedIn">
+              <img src="https://img.icons8.com/fluent/48/000000/linkedin.png" alt="LinkedIn" class="h-8 w-8" />
+            </a>
+          </div>
         </div>
+
       </div>
       <div>
         <h4 class="footer-heading-sub">Empresa</h4>
@@ -41,30 +48,29 @@
 <script setup></script>
 
 <style scoped>
-/* Estilos del footer con variables de CSS */
 .footer {
   background-color: var(--color-footer-bg);
   color: var(--color-footer-text);
-  font-size: 0.875rem; /* text-sm */
-  padding: 2.5rem 1rem; /* py-10 px-4 */
+  font-size: 0.875rem;
+  padding: 2.5rem 1rem;
 }
 
 .footer-heading-main {
-  font-size: 1.25rem; /* text-xl */
+  font-size: 1.25rem;
   font-weight: bold;
   color: var(--color-footer-heading);
-  margin-bottom: 1rem; /* mb-4 */
+  margin-bottom: 1rem;
 }
 
 .footer-heading-sub {
-  font-weight: 600; /* font-semibold */
+  font-weight: 600;
   color: var(--color-footer-heading);
-  margin-bottom: 0.5rem; /* mb-2 */
+  margin-bottom: 0.5rem;
 }
 
 .footer-list {
   list-style: none;
   padding: 0;
-  line-height: 1.5; /* Espacio entre los elementos de la lista */
+  line-height: 1.5;
 }
 </style>
