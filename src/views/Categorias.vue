@@ -3,11 +3,13 @@
     <Navbar />
 
     <section class="px-4 py-12">
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-        <CategoryCard 
-          v-for="cat in categorias" 
-          :key="cat.nombre" 
-          :categoria="cat" 
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto"
+      >
+        <CategoryCard
+          v-for="cat in categorias"
+          :key="cat.nombre"
+          :categoria="cat"
         />
       </div>
     </section>
@@ -17,13 +19,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import Navbar from '@/components/Navbar.vue'
-import Footer from '@/components/Footer.vue'
-import CategoryCard from '@/components/CategoryCard.vue' 
-import categoriasData from '@/assets/json/categorias.json'
+import { ref } from "vue";
+import Navbar from "@/components/Navbar.vue";
+import Footer from "@/components/Footer.vue";
+import CategoryCard from "@/components/CategoryCard.vue";
+import categoriasData from "@/assets/json/categorias.json";
 
-const categorias = ref(categoriasData)
+const categorias = ref(categoriasData);
 </script>
 
 <style scoped>
