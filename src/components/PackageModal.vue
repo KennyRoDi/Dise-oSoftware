@@ -21,6 +21,13 @@
           <label class="block font-semibold strong-text mb-1" for="precio">Precio ($)</label>
           <input v-model.number="editablePackage.precio" id="precio" type="number" required min="0" class="modal-input" />
         </div>
+
+        <!-- =========== NUEVO CAMPO PARA EL ENLACE DE YOUTUBE =========== -->
+        <div class="mb-4">
+          <label class="block font-semibold strong-text mb-1" for="video_youtube">Enlace de YouTube (opcional)</label>
+          <input v-model="editablePackage.video_youtube" id="video_youtube" type="url" class="modal-input" placeholder="https://www.youtube.com/watch?v=..." />
+        </div>
+        <!-- ============================================================= -->
         
         <div class="flex justify-end gap-3 mt-6">
           <button type="button" @click="$emit('close')" class="btn-plain">Cancelar</button>
@@ -34,42 +41,30 @@
 <script setup>
 import { ref, watch } from 'vue';
 
-// --- PROPS ---
-// Define las propiedades que este componente espera recibir desde el exterior (el componente padre).
 const props = defineProps({
-  // 'paquete' es el objeto con los datos. Puede ser un paquete existente o uno nuevo vacío.
   paquete: {
     type: Object,
     required: true,
   },
-  // 'isEditing' es un booleano que nos ayuda a cambiar el título del modal.
   isEditing: {
     type: Boolean,
     default: false,
   },
 });
 
-// --- EMITS ---
-// Define los eventos personalizados que este componente puede enviar hacia el exterior.
 const emit = defineEmits(['close', 'save']);
 
-// --- ESTADO LOCAL ---
-// Creamos una copia reactiva de la prop 'paquete'.
-// Es una buena práctica no modificar las props directamente.
-// Trabajamos sobre esta copia y solo la enviamos al padre al guardar.
+// No es necesario cambiar la lógica aquí. La copia con '...'
+// incluirá automáticamente el campo 'video_youtube' si existe en la prop.
 const editablePackage = ref({ ...props.paquete });
 
-// --- OBSERVADOR (WATCHER) ---
-// Este observador se activa si la prop 'paquete' cambia desde el padre.
-// Esto es útil si el modal permanece montado y se le pasan diferentes paquetes para editar.
 watch(() => props.paquete, (newVal) => {
   editablePackage.value = { ...newVal };
-}, { deep: true }); // 'deep' es para observar cambios dentro del objeto.
+}, { deep: true });
 
-// --- MÉTODOS ---
-// Esta función se ejecuta cuando el formulario es enviado.
 const handleSubmit = () => {
-  // Emite el evento 'save' y pasa la copia local del paquete con los datos actualizados.
+  // Al guardar, 'editablePackage.value' ya contiene el nuevo campo 'video_youtube',
+  // por lo que se enviará correctamente al componente padre (perfil.vue).
   emit('save', editablePackage.value);
 };
 </script>

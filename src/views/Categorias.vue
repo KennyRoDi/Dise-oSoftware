@@ -3,14 +3,26 @@
     <Navbar />
 
     <section class="px-4 py-12">
+      <div v-if="loading" class="text-center muted text-lg py-10">
+        Cargando categorías...
+      </div>
+      <div v-else-if="error" class="text-center text-red-500 text-lg py-10">
+        <p>Ocurrió un error al cargar las categorías:</p>
+        <p class="mt-2 text-sm">{{ error }}</p>
+      </div>
+
       <div
+        v-else-if="categories.length > 0"
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto"
       >
         <CategoryCard
-          v-for="cat in categorias"
+          v-for="cat in categories"
           :key="cat.nombre"
           :categoria="cat"
         />
+      </div>
+       <div v-else class="text-center muted text-lg py-10">
+        No se encontraron categorías.
       </div>
     </section>
 
@@ -19,13 +31,17 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted } from "vue";
 import Navbar from "@/components/Navbar.vue";
 import Footer from "@/components/Footer.vue";
 import CategoryCard from "@/components/CategoryCard.vue";
-import categoriasData from "@/assets/json/categorias.json";
+import { useCategories } from "@/composables/useCategories.js";
 
-const categorias = ref(categoriasData);
+const { categories, loading, error, loadAll } = useCategories();
+
+onMounted(() => {
+  loadAll();
+});
 </script>
 
 <style scoped>

@@ -80,6 +80,7 @@ onUnmounted(() => {
 
 function cerrarSesion() {
     logout()
+    //localStorage.clear();  //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     router.push('/')
     closeMenu() 
 }

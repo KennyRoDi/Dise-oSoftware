@@ -111,6 +111,17 @@
   </div>
 </template>
 
+Claro, aquí tienes el script de perfil.vue actualizado para que utilice la función deletePackage que acabamos de añadir al composable.
+
+Los cambios principales son dos:
+
+Se importa la función deletePackage desde useServices.
+
+La función eliminarPaquete se modifica para que sea async y llame a deletePackage, en lugar de manipular localStorage directamente.
+
+Script de perfil.vue (Actualizado con DELETE)
+Fragmento de código
+
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
@@ -119,6 +130,7 @@ import Footer from '@/components/Footer.vue'
 import PackageModal from '@/components/PackageModal.vue'
 import SolicitudCard from '@/components/SolicitudCard.vue'
 import { useProfiles } from '@/composables/useArtist.js'
+// 1. Importamos la nueva función 'deletePackage'
 import { useServices } from '@/composables/useServices.js'
 import comentariosData from '@/assets/json/comentarios.json'
 import solicitudesData from '@/assets/json/solicitudes.json'
@@ -126,7 +138,8 @@ import solicitudesData from '@/assets/json/solicitudes.json'
 // --- ESTADO Y COMPOSABLES ---
 const route = useRoute()
 const { profiles, loadAll: loadAllProfiles, loading: loadingProfiles, error: errorProfiles } = useProfiles()
-const { services, loadAll: loadAllServices, loading: loadingServices, error: errorServices } = useServices()
+// 2. Obtenemos 'deletePackage' junto con las otras funciones del composable
+const { services, loadAll: loadAllServices, loading: loadingServices, error: errorServices, addPackage, deletePackage } = useServices()
 
 const perfil = ref(null)
 const comentarios = ref(comentariosData)
@@ -205,10 +218,10 @@ function restaurarDatos() {
   }
 }
 
-// --- FUNCIONES CRUD PARA PAQUETES (Modificadas para no usar localStorage) ---
+// --- FUNCIONES CRUD PARA PAQUETES ---
 function abrirModalParaCrear() {
   editandoIndex.value = null
-  paqueteEditable.value = { nombre: '', descripcion: '', precio: 0 }
+  paqueteEditable.value = { nombre: '', descripcion: '', precio: 0, video_youtube: '' }
   mostrarModal.value = true
 }
 
@@ -222,33 +235,54 @@ function cerrarModal() {
   mostrarModal.value = false
 }
 
-function guardarPaquete(paqueteActualizado) {
-  if (!servicioAsociadoAlPerfil.value) return;
-  const indiceServicioActual = services.value.findIndex(s => s.titulo.toLowerCase() === perfil.value.usuario.toLowerCase());
-  if (indiceServicioActual === -1) return;
-
+async function guardarPaquete(paqueteActualizado) {
+  // Bloque IF para CREAR un paquete nuevo (usa el POST)
   if (editandoIndex.value === null) {
-    if (!services.value[indiceServicioActual].paquetes) {
-      services.value[indiceServicioActual].paquetes = [];
+    if (!servicioAsociadoAlPerfil.value) {
+      alert('Error: No se puede añadir un paquete sin un servicio asociado.')
+      return
     }
-    services.value[indiceServicioActual].paquetes.push(paqueteActualizado);
-  } else {
-    services.value[indiceServicioActual].paquetes[editandoIndex.value] = paqueteActualizado;
+    const serviceId = servicioAsociadoAlPerfil.value.id
+
+    try {
+      await addPackage(serviceId, paqueteActualizado)
+      cerrarModal()
+    } catch (err) {
+      alert(`Error al guardar el paquete: ${err.message}`)
+    }
+  } 
+  // Bloque ELSE para EDITAR (se queda como estaba, para el futuro PUT)
+  else {
+    const indiceServicioActual = services.value.findIndex(s => s.id === servicioAsociadoAlPerfil.value.id)
+    if (indiceServicioActual !== -1) {
+      services.value[indiceServicioActual].paquetes[editandoIndex.value] = paqueteActualizado
+      localStorage.setItem('myServicesData', JSON.stringify(services.value))
+      cerrarModal()
+    }
   }
-  
-  cerrarModal()
 }
 
-function eliminarPaquete(index) {
+// 3. --- FUNCIÓN 'eliminarPaquete' ACTUALIZADA PARA USAR EL COMPOSABLE ---
+async function eliminarPaquete(index) {
   if (confirm('¿Estás seguro de que quieres eliminar este paquete?')) {
-    if (!servicioAsociadoAlPerfil.value) return;
-    const indiceServicioActual = services.value.findIndex(s => s.titulo.toLowerCase() === perfil.value.usuario.toLowerCase());
-    if (indiceServicioActual === -1) return;
-    services.value[indiceServicioActual].paquetes.splice(index, 1);
+    if (!servicioAsociadoAlPerfil.value) {
+      alert("Error: No se ha encontrado el servicio asociado.");
+      return;
+    }
+    
+    const serviceId = servicioAsociadoAlPerfil.value.id;
+
+    try {
+      // Llamamos a la nueva función del composable que hace el DELETE
+      await deletePackage(serviceId, index);
+      alert('Paquete eliminado exitosamente.');
+    } catch (err) {
+      alert(`Error al eliminar el paquete: ${err.message}`);
+    }
   }
 }
 
-// --- HOOKS DE CICLO DE VIDA ---
+// --- HOOKS DE CICLO DE VIDA (sin cambios) ---
 watch(
   () => route.params.usuario,
   async (newUsuario) => {
@@ -265,7 +299,7 @@ watch(
 )
 
 onMounted(() => {
-  // Carga de solicitudes (desde localStorage o JSON)
+  // Carga de solicitudes (desde localStorage o JSON, sin cambios)
   const storedSolicitudes = localStorage.getItem('todasLasSolicitudes')
   if (storedSolicitudes) {
     todasLasSolicitudes.value = JSON.parse(storedSolicitudes)
@@ -280,6 +314,7 @@ onMounted(() => {
   }
 })
 </script>
+
 <style scoped>
 /* Page wrapper uses your theme variables (no cambios en themes.css) */
 .page {
