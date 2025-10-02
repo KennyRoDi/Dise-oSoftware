@@ -10,39 +10,54 @@
       </p>
       <RouterLink to="/categorias" class="btn-primary inline-block px-6 py-2 rounded mb-8">Ver Categorías</RouterLink>
 
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-5xl mx-auto">
+      <div v-if="loadingCategories" class="text-center py-4">Cargando categorías...</div>
+      <div v-else-if="errorCategories" class="text-center text-red-500 py-4">
+        Error: {{ errorCategories }}
+      </div>
+      <div v-else-if="categories.length" class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-5xl mx-auto">
         <CategoryCard
-          v-for="cat in categorias.slice(0, 3)"
+          v-for="cat in categories.slice(0, 3)"
           :key="cat.nombre"
           :categoria="cat"
         />
       </div>
+      <div v-else class="text-center py-4">No se encontraron categorías.</div>
     </section>
 
     <section class="px-4 py-12">
       <div class="text-center mb-6">
         <RouterLink to="/servicios" class="btn-primary inline-block px-6 py-2 rounded mb-8">Ver Servicios</RouterLink>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-5xl mx-auto">
+      <div v-if="loadingServices" class="text-center py-4">Cargando servicios...</div>
+      <div v-else-if="errorServices" class="text-center text-red-500 py-4">
+        Error: {{ errorServices }}
+      </div>
+      <div v-else-if="services.length" class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-5xl mx-auto">
         <ServiceCard
-          v-for="serv in servicios.slice(0, 3)"
+          v-for="serv in services.slice(0, 3)"
           :key="serv.id"
           :servicio="serv"
         />
       </div>
+       <div v-else class="text-center py-4">No se encontraron servicios.</div>
     </section>
 
     <section class="px-4 py-12">
       <div class="text-center mb-6">
         <RouterLink to="/servicios" class="btn-primary inline-block px-6 py-2 rounded mb-8">Destacados</RouterLink>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-5xl mx-auto">
+       <div v-if="loadingServices" class="text-center py-4">Cargando destacados...</div>
+      <div v-else-if="errorServices" class="text-center text-red-500 py-4">
+        Error: {{ errorServices }}
+      </div>
+      <div v-else-if="destacados.length" class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-5xl mx-auto">
         <ServiceCard
           v-for="dest in destacados"
           :key="dest.id"
           :servicio="dest"
         />
       </div>
+      <div v-else class="text-center py-4">No se encontraron servicios destacados.</div>
     </section>
 
     <section class="px-4 py-12">
@@ -73,19 +88,28 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue' // Importa computed
 import { RouterLink } from 'vue-router'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import CategoryCard from '@/components/CategoryCard.vue'
 import ServiceCard from '@/components/ServiceCard.vue'
-import categoriasData from '@/assets/json/categorias.json'
-import serviciosData from '@/assets/json/servicios.json'
 import comentariosData from '@/assets/json/comentarios.json'
+import { useCategories } from '@/composables/useCategories.js'
+import { useServices } from '@/composables/useServices.js'
 
-const categorias = ref(categoriasData)
-const servicios = ref(serviciosData)
-const destacados = ref(serviciosData.slice(0, 3))
+const { categories, loading: loadingCategories, error: errorCategories, loadAll: loadAllCategories } = useCategories()
+const { services, loading: loadingServices, error: errorServices, loadAll: loadAllServices } = useServices()
+
+const destacados = computed(() => {
+  return services.value.slice(0, 3)
+})
+// Carga todos los datos necesarios cuando el componente se monta
+onMounted(() => {
+  loadAllCategories()
+  loadAllServices()
+})
+// Mantiene los datos locales para la sección de comentarios
 const comentarios = ref(comentariosData)
 </script>
 

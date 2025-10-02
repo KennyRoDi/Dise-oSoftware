@@ -74,7 +74,6 @@ function cancelarSolicitud(index) {
   display: block;
 }
 
-/* Profile card */
 .profile-card {
   background-color: var(--color-background-light);
   color: var(--color-text);
@@ -112,7 +111,7 @@ function cancelarSolicitud(index) {
 
 /* Danger / cancel button */
 .btn-danger {
-  background-color: #dc2626; /* rojo para acción peligrosa */
+  background-color: #dc2626;
   color: #fff;
   padding: 0.5rem 1rem;
   border-radius: 0.375rem;
@@ -129,12 +128,10 @@ function cancelarSolicitud(index) {
   object-fit: cover;
 }
 
-/* Headings ensure contrast */
 h2, h3 {
   color: var(--color-text);
 }
 
-/* small accessibility tweaks */
 button:focus, a:focus {
   outline: 3px solid rgba(0,0,0,0.06);
   outline-offset: 2px;

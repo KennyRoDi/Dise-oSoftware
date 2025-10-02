@@ -4,78 +4,85 @@
     <section class="px-4 py-12 max-w-7xl mx-auto">
       <h2 class="text-3xl font-bold mb-8 strong-text">Catálogo</h2>
 
-      <div class="flex flex-col md:flex-row items-center gap-4 mb-8">
-        <button @click="toggleSearch" class="btn-plain p-2 rounded">
-          <span v-if="!showSearch">Buscar</span>
-          <span v-else>Buscar</span>
-        </button>
-        <button @click="toggleFilters" class="btn-plain p-2 rounded">
-          <span v-if="!showFilters">Filtros</span>
-          <span v-else>Filtros</span>
-        </button>
-        <div v-if="showSearch" class="w-full md:w-1/3">
-          <input
-            v-model="searchQuery"
-            type="text"
-            placeholder="Buscar por título..."
-            class="w-full input-field px-4 py-2 mt-2 md:mt-0 rounded"
-          />
-        </div>
+      <div v-if="isLoading" class="text-center muted text-lg py-10">
+        <p>Cargando catálogo...</p>
+      </div>
+      <div v-else-if="error" class="text-center text-red-500 text-lg py-10">
+        <p>Ocurrió un error al cargar los datos: {{ error }}</p>
       </div>
 
-      <div v-if="showFilters" class="mb-8 space-y-4 p-4 panel rounded-lg">
-        <div>
-          <h3 class="font-semibold mb-2 text-lg strong-text">Filtrar por Categoría</h3>
-          <div class="flex flex-wrap gap-2">
-            <span
-              v-for="cat in categorias"
-              :key="cat.nombre"
-              @click="filtroCategoria = filtroCategoria === cat.nombre ? '' : cat.nombre"
-              class="chip px-4 py-2 rounded-full text-sm cursor-pointer transition"
-              :class="{ 'chip-active': filtroCategoria === cat.nombre }"
-            >
-              {{ cat.nombre }}
-            </span>
+      <div v-else>
+        <div class="flex flex-col md:flex-row items-center gap-4 mb-8">
+          <button @click="toggleSearch" class="btn-plain p-2 rounded">
+            <span>Buscar</span>
+          </button>
+          <button @click="toggleFilters" class="btn-plain p-2 rounded">
+            <span>Filtros</span>
+          </button>
+          <div v-if="showSearch" class="w-full md:w-1/3">
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Buscar por título..."
+              class="w-full input-field px-4 py-2 mt-2 md:mt-0 rounded"
+            />
           </div>
         </div>
-        <div>
-          <h3 class="font-semibold mb-2 text-lg strong-text">Precio Máximo</h3>
-          <input
-            v-model="precioMax"
-            type="range"
-            min="0"
-            max="10000"
-            step="100"
-            class="w-full range-input"
-          />
-          <p class="text-sm muted">Hasta <span class="font-bold strong-text">${{ precioMax }}</span></p>
-        </div>
-        <div>
-          <h3 class="font-semibold mb-2 text-lg strong-text">Filtrar por Ubicación</h3>
-          <div class="flex flex-wrap gap-2">
-            <span
-              v-for="ubi in ubicacionesDisponibles"
-              :key="ubi"
-              @click="filtroUbicacion = filtroUbicacion === ubi ? '' : ubi"
-              class="chip px-4 py-2 rounded-full text-sm cursor-pointer transition"
-              :class="{'chip-active': filtroUbicacion === ubi }"
-            >
-              {{ ubi }}
-            </span>
-          </div>
-        </div>
-      </div>
 
-      <div v-if="serviciosFiltrados.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        <ServiceCard
-          v-for="serv in serviciosFiltrados"
-          :key="serv.id"
-          :servicio="serv"
-        />
-      </div>
-      <div v-else class="text-center muted text-lg py-10">
-        <p>No se encontraron servicios que coincidan con los criterios de búsqueda y filtros.</p>
-        <p class="mt-2">Intenta ajustar tus selecciones.</p>
+        <div v-if="showFilters" class="mb-8 space-y-4 p-4 panel rounded-lg">
+          <div>
+            <h3 class="font-semibold mb-2 text-lg strong-text">Filtrar por Categoría</h3>
+            <div class="flex flex-wrap gap-2">
+              <span
+                v-for="cat in categories"
+                :key="cat.nombre"
+                @click="filtroCategoria = filtroCategoria === cat.nombre ? '' : cat.nombre"
+                class="chip px-4 py-2 rounded-full text-sm cursor-pointer transition"
+                :class="{ 'chip-active': filtroCategoria === cat.nombre }"
+              >
+                {{ cat.nombre }}
+              </span>
+            </div>
+          </div>
+          <div>
+            <h3 class="font-semibold mb-2 text-lg strong-text">Precio Máximo</h3>
+            <input
+              v-model="precioMax"
+              type="range"
+              min="0"
+              max="10000"
+              step="100"
+              class="w-full range-input"
+            />
+            <p class="text-sm muted">Hasta <span class="font-bold strong-text">${{ precioMax }}</span></p>
+          </div>
+          <div>
+            <h3 class="font-semibold mb-2 text-lg strong-text">Filtrar por Ubicación</h3>
+            <div class="flex flex-wrap gap-2">
+              <span
+                v-for="ubi in ubicacionesDisponibles"
+                :key="ubi"
+                @click="filtroUbicacion = filtroUbicacion === ubi ? '' : ubi"
+                class="chip px-4 py-2 rounded-full text-sm cursor-pointer transition"
+                :class="{'chip-active': filtroUbicacion === ubi }"
+              >
+                {{ ubi }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="serviciosFiltrados.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          <ServiceCard
+            v-for="serv in serviciosFiltrados"
+            :key="serv.id"
+            :servicio="serv"
+          />
+        </div>
+        <div v-else class="text-center muted text-lg py-10">
+          <p>No se encontraron servicios que coincidan con los criterios de búsqueda y filtros.</p>
+          <p class="mt-2">Intenta ajustar tus selecciones.</p>
+        </div>
       </div>
     </section>
     <Footer />
@@ -86,15 +93,16 @@
 import { ref, computed, onMounted } from 'vue';
 import Navbar from '@/components/Navbar.vue';
 import Footer from '@/components/Footer.vue';
-import serviciosData from '@/assets/json/servicios.json';
-import categoriasData from '@/assets/json/categorias.json';
-
-// 1. IMPORTAMOS EL NUEVO COMPONENTE
 import ServiceCard from '@/components/ServiceCard.vue';
+import { useServices } from '@/composables/useServices.js';
+import { useCategories } from '@/composables/useCategories.js';
 
-// 2. TODA LA LÓGICA DE ESTADO Y FILTRADO PERMANECE EXACTAMENTE IGUAL
-const servicios = ref([]); // Contendrá los datos combinados
-const categorias = ref(categoriasData);
+// --- ESTADO Y COMPOSABLES ---
+// Llama a los composables para obtener los datos y estados
+const { services, loadAll: loadAllServices, loading: loadingServices, error: errorServices } = useServices();
+const { categories, loadAll: loadAllCategories, loading: loadingCategories, error: errorCategories } = useCategories();
+
+// Estados para los filtros y la UI
 const showFilters = ref(false);
 const showSearch = ref(false);
 const searchQuery = ref('');
@@ -102,25 +110,34 @@ const filtroCategoria = ref('');
 const filtroUbicacion = ref('');
 const precioMax = ref(10000);
 
+// Estados combinados para una UX más simple
+const isLoading = computed(() => loadingServices.value || loadingCategories.value);
+const error = computed(() => errorServices.value || errorCategories.value);
+
+// --- PROPIEDADES COMPUTADAS ---
+// La lógica de estas funciones no cambia, ya que operan sobre los 'refs' que ahora vienen de los composables
 const ubicacionesDisponibles = computed(() => {
-  const locations = new Set(servicios.value.map(s => s.ubicacion));
+  if (!services.value) return [];
+  const locations = new Set(services.value.map(s => s.ubicacion));
   return Array.from(locations).sort();
 });
 
 const serviciosFiltrados = computed(() => {
-  return servicios.value.filter(s => {
+  if (!services.value) return [];
+  return services.value.filter(s => {
     const tituloLower = s.titulo ? s.titulo.toLowerCase() : '';
     const ubicacionLower = s.ubicacion ? s.ubicacion.toLowerCase() : '';
 
     const coincideBusqueda = tituloLower.includes(searchQuery.value.toLowerCase());
     const coincideCategoria = filtroCategoria.value ? s.categoria === filtroCategoria.value : true;
     const coincideUbicacion = filtroUbicacion.value ? ubicacionLower === filtroUbicacion.value.toLowerCase() : true;
-    const coincidePrecio = s.paquetes && Array.isArray(s.paquetes) ? s.paquetes.some(p => p.precio <= precioMax.value) : true; // Se ajusta para ser más permisivo si no hay paquetes
+    const coincidePrecio = s.paquetes && Array.isArray(s.paquetes) ? s.paquetes.some(p => p.precio <= precioMax.value) : true;
 
     return coincideBusqueda && coincideCategoria && coincideUbicacion && coincidePrecio;
   });
 });
 
+// --- FUNCIONES (sin cambios) ---
 function toggleFilters() {
   showFilters.value = !showFilters.value;
 }
@@ -129,31 +146,15 @@ function toggleSearch() {
   showSearch.value = !showSearch.value;
 }
 
+// --- CICLO DE VIDA ---
+// onMounted ahora carga todos los datos necesarios desde la API
 onMounted(() => {
-  let allServices = [...serviciosData];
-  const approvedServicesJSON = localStorage.getItem('approvedServices');
-
-  if (approvedServicesJSON) {
-    try {
-      const approvedServices = JSON.parse(approvedServicesJSON);
-      const existingIds = new Set(allServices.map(s => s.id));
-      
-      approvedServices.forEach(approvedServ => {
-        if (!existingIds.has(approvedServ.id)) {
-          allServices.push(approvedServ);
-          existingIds.add(approvedServ.id);
-        }
-      });
-    } catch (e) {
-      console.error("Error al procesar servicios aprobados desde localStorage:", e);
-    }
-  }
-  servicios.value = allServices;
+  loadAllServices();
+  loadAllCategories();
 });
 </script>
 
 <style scoped>
-/* Estilos generales de la página y los filtros */
 .page {
   background-color: var(--color-body-bg);
   color: var(--color-text);

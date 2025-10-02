@@ -2,7 +2,14 @@
   <div class="page font-sans min-h-screen flex flex-col">
     <Navbar />
 
-    <main class="flex-1">
+    <div v-if="isLoading" class="flex-grow flex justify-center items-center">
+      <p class="text-lg muted">Cargando perfil...</p>
+    </div>
+    <div v-else-if="error" class="flex-grow flex justify-center items-center text-red-500">
+      <p>Error al cargar los datos: {{ error }}</p>
+    </div>
+
+    <main v-else class="flex-grow">
       <section class="px-4 py-12 max-w-4xl mx-auto">
         <div v-if="perfil" class="profile-card p-6 rounded shadow">
           <div class="flex flex-col md:flex-row items-center gap-6">
@@ -14,7 +21,7 @@
             </div>
           </div>
         </div>
-        <div v-else-if="buscado" class="text-center muted mt-10">
+        <div v-else class="text-center muted mt-10">
           No se encontró ningún perfil con ese nombre.
         </div>
       </section>
@@ -24,7 +31,6 @@
           <h2 class="text-2xl font-bold strong-text">Paquetes de {{ servicioAsociadoAlPerfil.titulo }}</h2>
           <button @click="abrirModalParaCrear" class="btn-accept">+ Añadir Paquete</button>
         </div>
-
         <div v-if="servicioAsociadoAlPerfil.paquetes && servicioAsociadoAlPerfil.paquetes.length > 0" class="grid md:grid-cols-3 gap-6">
           <div
             v-for="(paq, index) in servicioAsociadoAlPerfil.paquetes"
@@ -47,10 +53,9 @@
             </div>
           </div>
         </div>
-        
         <div v-else class="empty-card p-8 rounded-lg muted text-center">
-            <p class="text-lg">📦 No hay paquetes para mostrar.</p>
-            <p class="text-sm mt-2">¡Añade tu primer paquete para empezar!</p>
+          <p class="text-lg">📦 No hay paquetes para mostrar.</p>
+          <p class="text-sm mt-2">¡Añade tu primer paquete para empezar!</p>
         </div>
       </section>
 
@@ -70,10 +75,7 @@
         </div>
       </section>
 
-      <section
-        v-if="solicitudesGestionadas.length > 0 || servicioAsociadoAlPerfil"
-        class="px-4 py-12 max-w-6xl mx-auto"
-      >
+      <section v-if="solicitudesGestionadas.length > 0 || servicioAsociadoAlPerfil" class="px-4 py-12 max-w-6xl mx-auto">
         <div class="flex justify-between items-center mb-6">
           <h2 class="text-2xl font-bold strong-text">Todas las Solicitudes ({{ solicitudesGestionadas.length }})</h2>
           <button @click="restaurarDatos" class="btn-plain flex items-center gap-2" aria-label="Restaurar solicitudes">
@@ -82,13 +84,13 @@
           </button>
         </div>
         <div v-if="solicitudesGestionadas.length > 0" class="grid gap-6">
-        <SolicitudCard
-          v-for="solicitud in solicitudesGestionadas"
-          :key="solicitud.id"
-          :solicitud="solicitud"
-          @accept="aceptarSolicitud"
-          @reject="rechazarSolicitud"
-        />
+          <SolicitudCard
+            v-for="solicitud in solicitudesGestionadas"
+            :key="solicitud.id"
+            :solicitud="solicitud"
+            @accept="aceptarSolicitud"
+            @reject="rechazarSolicitud"
+          />
         </div>
         <div v-else class="empty-card p-8 rounded-lg muted text-center">
           <p class="text-lg">📭 No se han recibido solicitudes aún.</p>
@@ -109,38 +111,52 @@
   </div>
 </template>
 
+Claro, aquí tienes el script de perfil.vue actualizado para que utilice la función deletePackage que acabamos de añadir al composable.
+
+Los cambios principales son dos:
+
+Se importa la función deletePackage desde useServices.
+
+La función eliminarPaquete se modifica para que sea async y llame a deletePackage, en lugar de manipular localStorage directamente.
+
+Script de perfil.vue (Actualizado con DELETE)
+Fragmento de código
+
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import PackageModal from '@/components/PackageModal.vue'
-
-// --- IMPORTACIÓN DE DATOS ---
-import perfilesData from '@/assets/json/perfiles.json'
-import serviciosData from '@/assets/json/servicios.json'
+import SolicitudCard from '@/components/SolicitudCard.vue'
+import { useProfiles } from '@/composables/useArtist.js'
+// 1. Importamos la nueva función 'deletePackage'
+import { useServices } from '@/composables/useServices.js'
 import comentariosData from '@/assets/json/comentarios.json'
 import solicitudesData from '@/assets/json/solicitudes.json'
-import SolicitudCard from '@/components/SolicitudCard.vue'
 
-// --- ESTADO Y REFERENCIAS ---
+// --- ESTADO Y COMPOSABLES ---
 const route = useRoute()
+const { profiles, loadAll: loadAllProfiles, loading: loadingProfiles, error: errorProfiles } = useProfiles()
+// 2. Obtenemos 'deletePackage' junto con las otras funciones del composable
+const { services, loadAll: loadAllServices, loading: loadingServices, error: errorServices, addPackage, deletePackage } = useServices()
+
 const perfil = ref(null)
-const buscado = ref(false)
-const nombreBusqueda = ref('')
-const servicios = ref([])
 const comentarios = ref(comentariosData)
 const todasLasSolicitudes = ref([])
 
-// --- ESTADO PARA EL MODAL ---
+const isLoading = computed(() => loadingProfiles.value || loadingServices.value)
+const error = computed(() => errorProfiles.value || errorServices.value)
+
+// --- ESTADO PARA EL MODAL (sin cambios) ---
 const mostrarModal = ref(false)
 const paqueteEditable = ref({ nombre: '', descripcion: '', precio: null })
-const editandoIndex = ref(null) // null para crear, un número para editar
+const editandoIndex = ref(null)
 
-// --- PROPIEDADES COMPUTADAS ---
+// --- PROPIEDADES COMPUTADAS (sin cambios en su lógica) ---
 const servicioAsociadoAlPerfil = computed(() => {
-  if (!perfil.value || !servicios.value) return null
-  return servicios.value.find(s => s.titulo.toLowerCase() === perfil.value.usuario.toLowerCase()) || null
+  if (!perfil.value || !services.value) return null
+  return services.value.find(s => s.titulo.toLowerCase() === perfil.value.usuario.toLowerCase()) || null
 })
 
 const reseñasDelServicio = computed(() => {
@@ -155,8 +171,7 @@ const solicitudesGestionadas = computed(() => {
     .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
 })
 
-//-----------
-
+// --- LÓGICA DE SOLICITUDES (sin cambios) ---
 function actualizarEstadoSolicitud(solicitudId, nuevoEstado) {
   const solicitudIndex = todasLasSolicitudes.value.findIndex(s => s.id === solicitudId)
   if (solicitudIndex !== -1) {
@@ -188,16 +203,9 @@ function rechazarSolicitud(solicitudId) {
   actualizarEstadoSolicitud(solicitudId, 'rechazada')
 }
 
-function buscarPerfil() {
-  buscado.value = true
-  const nombre = nombreBusqueda.value.trim().toLowerCase()
-  perfil.value = perfilesData.find(p => p.usuario.toLowerCase() === nombre) || null
-}
-
 function restaurarDatos() {
   if (confirm('¿Estás seguro de que quieres restaurar todas las solicitudes a su estado inicial?')) {
     localStorage.removeItem('todasLasSolicitudes')
-    localStorage.removeItem('nuevasSolicitudes') // Limpieza de clave antigua si existe
     
     const initialSolicitudes = solicitudesData.map(sol => ({
       ...sol,
@@ -210,14 +218,10 @@ function restaurarDatos() {
   }
 }
 
-// --- FUNCIONES CRUD PARA PAQUETES (interactúan con el modal) ---
-function guardarServiciosEnStorage() {
-  localStorage.setItem('serviciosData', JSON.stringify(servicios.value))
-}
-
+// --- FUNCIONES CRUD PARA PAQUETES ---
 function abrirModalParaCrear() {
   editandoIndex.value = null
-  paqueteEditable.value = { nombre: '', descripcion: '', precio: 0 }
+  paqueteEditable.value = { nombre: '', descripcion: '', precio: 0, video_youtube: '' }
   mostrarModal.value = true
 }
 
@@ -231,60 +235,71 @@ function cerrarModal() {
   mostrarModal.value = false
 }
 
-function guardarPaquete(paqueteActualizado) {
-  if (!servicioAsociadoAlPerfil.value) return;
-  const indiceServicioActual = servicios.value.findIndex(s => s.titulo.toLowerCase() === perfil.value.usuario.toLowerCase());
-  if (indiceServicioActual === -1) return;
-
+async function guardarPaquete(paqueteActualizado) {
+  // Bloque IF para CREAR un paquete nuevo (usa el POST)
   if (editandoIndex.value === null) {
-    // CREAR
-    if (!servicios.value[indiceServicioActual].paquetes) {
-      servicios.value[indiceServicioActual].paquetes = [];
+    if (!servicioAsociadoAlPerfil.value) {
+      alert('Error: No se puede añadir un paquete sin un servicio asociado.')
+      return
     }
-    servicios.value[indiceServicioActual].paquetes.push(paqueteActualizado);
-  } else {
-    // ACTUALIZAR
-    servicios.value[indiceServicioActual].paquetes[editandoIndex.value] = paqueteActualizado;
+    const serviceId = servicioAsociadoAlPerfil.value.id
+
+    try {
+      await addPackage(serviceId, paqueteActualizado)
+      cerrarModal()
+    } catch (err) {
+      alert(`Error al guardar el paquete: ${err.message}`)
+    }
+  } 
+  // Bloque ELSE para EDITAR (se queda como estaba, para el futuro PUT)
+  else {
+    const indiceServicioActual = services.value.findIndex(s => s.id === servicioAsociadoAlPerfil.value.id)
+    if (indiceServicioActual !== -1) {
+      services.value[indiceServicioActual].paquetes[editandoIndex.value] = paqueteActualizado
+      localStorage.setItem('myServicesData', JSON.stringify(services.value))
+      cerrarModal()
+    }
   }
-  
-  guardarServiciosEnStorage()
-  cerrarModal()
 }
 
-function eliminarPaquete(index) {
+// 3. --- FUNCIÓN 'eliminarPaquete' ACTUALIZADA PARA USAR EL COMPOSABLE ---
+async function eliminarPaquete(index) {
   if (confirm('¿Estás seguro de que quieres eliminar este paquete?')) {
-    if (!servicioAsociadoAlPerfil.value) return;
-    const indiceServicioActual = servicios.value.findIndex(s => s.titulo.toLowerCase() === perfil.value.usuario.toLowerCase());
-    if (indiceServicioActual === -1) return;
-    servicios.value[indiceServicioActual].paquetes.splice(index, 1);
-    guardarServiciosEnStorage()
+    if (!servicioAsociadoAlPerfil.value) {
+      alert("Error: No se ha encontrado el servicio asociado.");
+      return;
+    }
+    
+    const serviceId = servicioAsociadoAlPerfil.value.id;
+
+    try {
+      // Llamamos a la nueva función del composable que hace el DELETE
+      await deletePackage(serviceId, index);
+      alert('Paquete eliminado exitosamente.');
+    } catch (err) {
+      alert(`Error al eliminar el paquete: ${err.message}`);
+    }
   }
 }
 
-// --- HOOKS DE CICLO DE VIDA ---
+// --- HOOKS DE CICLO DE VIDA (sin cambios) ---
 watch(
   () => route.params.usuario,
-  (newUsuario) => {
+  async (newUsuario) => {
     if (newUsuario) {
-      nombreBusqueda.value = newUsuario
-      buscarPerfil()
+      await Promise.all([
+        loadAllProfiles(),
+        loadAllServices()
+      ])
+      const nombre = newUsuario.trim().toLowerCase()
+      perfil.value = profiles.value.find(p => p.usuario.toLowerCase() === nombre) || null
     }
   },
   { immediate: true }
 )
 
 onMounted(() => {
-  // Carga de servicios 
-  const serviciosGuardados = localStorage.getItem('serviciosData')
-  servicios.value = serviciosGuardados ? JSON.parse(serviciosGuardados) : JSON.parse(JSON.stringify(serviciosData));
-
-  // Carga de perfil si no se hizo por el watcher
-  if (!perfil.value && route.params.usuario) {
-    nombreBusqueda.value = route.params.usuario
-    buscarPerfil()
-  }
-
-  // Carga de solicitudes (desde localStorage o JSON)
+  // Carga de solicitudes (desde localStorage o JSON, sin cambios)
   const storedSolicitudes = localStorage.getItem('todasLasSolicitudes')
   if (storedSolicitudes) {
     todasLasSolicitudes.value = JSON.parse(storedSolicitudes)
@@ -299,6 +314,7 @@ onMounted(() => {
   }
 })
 </script>
+
 <style scoped>
 /* Page wrapper uses your theme variables (no cambios en themes.css) */
 .page {
