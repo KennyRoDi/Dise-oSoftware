@@ -109,11 +109,11 @@ import Footer from "@/components/Footer.vue";
 import { useAuth } from "@/composables/useAuth.js";
 import { useUsers } from "@/composables/useUser.js";
 
-// --- CONFIGURATION CONSTANTS ---
+/* Constantes de OAuth / rutas */
 const GOOGLE_CLIENT_ID = "623164831395-ooojq523bftisjcj28ift0cvts7keq0e.apps.googleusercontent.com";
 const REDIRECT_PATH = "/inicio-sesion";
 
-// --- STATE MANAGEMENT ---
+/* Router y estado del formulario */
 const router = useRouter();
 const inputUsuario = ref("");
 const inputPassword = ref("");
@@ -121,24 +121,26 @@ const error = ref("");
 const apiMessage = ref("");
 const loading = ref(false);
 
+/* Composables: auth y usuarios */
 const { login } = useAuth();
 const { users, loadAll, registerUser } = useUsers();
 
+/* UI: toggle para mostrar/ocultar contraseña */
 const showPassword = ref(false);
 const passwordFieldType = computed(() =>
   showPassword.value ? "text" : "password"
 );
 
-// --- LIFECYCLE HOOKS ---
+/* Ejecutar al montar: manejar posible redirect de Google */
 onMounted(() => {
   handleGoogleRedirect();
 });
 
-// --- UTILITY FUNCTIONS ---
+/* -------------------------------
+   Utilidades
+   ------------------------------- */
 
-/**
- * Decode JWT token to extract user information
- */
+/* Decodifica un JWT (id_token) y devuelve el payload como objeto */
 function decodeJWT(token) {
   try {
     const base64Url = token.split('.')[1];
@@ -156,20 +158,18 @@ function decodeJWT(token) {
   }
 }
 
-/**
- * Generate a random username from email
- */
+/* Genera un nombre de usuario aleatorio a partir del email (para cuentas creadas vía Google) */
 function generateUsername(email) {
   const baseName = email.split('@')[0];
   const randomNum = Math.floor(Math.random() * 9999);
   return `${baseName}${randomNum}`;
 }
 
-// --- GOOGLE AUTH FUNCTIONS ---
+/* -------------------------------
+   Google OAuth (social login)
+   ------------------------------- */
 
-/**
- * Initiates Google OAuth flow
- */
+/* Inicia el flujo OAuth redirigiendo a Google */
 function handleSocialLogin(provider) {
   if (provider === 'google') {
     const redirectUri = window.location.origin + REDIRECT_PATH;
@@ -188,9 +188,11 @@ function handleSocialLogin(provider) {
   }
 }
 
-/**
- * Handles the redirect from Google and processes the ID token
- */
+/*
+  Maneja el redirect desde Google: si llega un id_token en el hash,
+  decodifica el token, verifica si el usuario existe y lo loguea;
+  si no existe, lo registra (registerUser) y luego lo loguea.
+*/
 async function handleGoogleRedirect() {
   const hash = window.location.hash.substring(1);
   const params = new URLSearchParams(hash);
@@ -201,24 +203,15 @@ async function handleGoogleRedirect() {
     apiMessage.value = "Procesando tu inicio de sesión con Google...";
     
     try {
-      // Decode the JWT token to get user info
       const userInfo = decodeJWT(idToken);
-      
       if (!userInfo || !userInfo.email) {
         throw new Error('No se pudo obtener la información del usuario');
       }
-
-      // Store the token
       localStorage.setItem('google_id_token', idToken);
-      
-      // Load all users to check if this Google user exists
       await loadAll();
-      
-      // Check if user exists by email
       let existingUser = users.value.find(u => u.correo === userInfo.email);
       
       if (existingUser) {
-        // User exists - log them in
         apiMessage.value = "¡Bienvenido de nuevo!";
         login({
           id: existingUser.id,
@@ -228,24 +221,21 @@ async function handleGoogleRedirect() {
           correo: existingUser.correo
         });
         
-        // Clean up URL and redirect
         router.replace({ path: '/' });
       } else {
-        // User doesn't exist - create new account
         apiMessage.value = "Creando tu cuenta...";
         
         const newUser = {
           nombre: userInfo.name || userInfo.email.split('@')[0],
           correo: userInfo.email,
           usuario: generateUsername(userInfo.email),
-          contraseña: crypto.randomUUID(), // Random password for Google users
-          rol: 'contratista', // Default role
-          googleId: userInfo.sub, // Store Google ID for reference
+          contraseña: crypto.randomUUID(), 
+          rol: 'contratista', 
+          googleId: userInfo.sub, 
         };
         
         await registerUser(newUser);
         
-        // Reload users to get the newly created user with ID
         await loadAll();
         const createdUser = users.value.find(u => u.correo === userInfo.email);
         
@@ -259,7 +249,6 @@ async function handleGoogleRedirect() {
             correo: createdUser.correo
           });
           
-          // Clean up URL and redirect
           router.replace({ path: '/' });
         }
       }
@@ -275,8 +264,11 @@ async function handleGoogleRedirect() {
   }
 }
 
-// --- STANDARD USER/PASS LOGIN LOGIC ---
+/* -------------------------------
+   Login estándar (usuario + contraseña)
+   ------------------------------- */
 
+/* Intenta iniciar sesión comparando usuario/email + contraseña contra el listado de users */
 async function iniciarSesion() {
   error.value = "";
   loading.value = true;
@@ -310,6 +302,7 @@ async function iniciarSesion() {
   }
 }
 </script>
+
 
 <style scoped>
 .page {

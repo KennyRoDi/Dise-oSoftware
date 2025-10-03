@@ -108,14 +108,19 @@ import Footer from '@/components/Footer.vue'
 import { useServices } from '@/composables/useServices.js'
 import comentariosData from '@/assets/json/comentarios.json'
 
+/* Datos y composable */
+// ruta actual para leer params (id)
 const route = useRoute()
+// composable de servicios: array reactivo, funciones y estados
 const { services, loadAll, getById, loading: loadingServicio, error: errorServicio } = useServices()
 
-const servicio = ref(null)
-const resenasFiltradas = ref([])
-const showModal = ref(false)
-const selectedPackage = ref(null)
+/* Estado local del componente */
+const servicio = ref(null)              // servicio cargado según id
+const resenasFiltradas = ref([])        // reseñas relacionadas al servicio
+const showModal = ref(false)            // control del modal de paquete
+const selectedPackage = ref(null)       // paquete seleccionado para ver detalles
 
+/* Funciones para modal de detalles de paquete */
 const showPackageDetails = (paquete) => {
     selectedPackage.value = paquete
     showModal.value = true
@@ -126,25 +131,24 @@ const closeModal = () => {
     selectedPackage.value = null
 }
 
+/* Watcher: cuando cambia la ruta (id) cargamos servicios y filtramos reseñas */
 watchEffect(async () => {
     const id = parseInt(route.params.id)
     if (!id) return
-    
-    // Nos aseguramos de que todos los servicios estén cargados (desde API o localStorage)
-    await loadAll()
-    
-    // Buscamos el servicio por ID en la lista ya cargada
+
+    await loadAll() // asegura que services esté cargado
     const encontrado = getById(id)
 
     if (encontrado) {
         servicio.value = encontrado
-        // La lógica para filtrar comentarios no cambia
+        // filtra reseñas con mismo servicio
         resenasFiltradas.value = comentariosData.filter(c => c.servicio.toLowerCase() === encontrado.titulo.toLowerCase())
     } else {
         servicio.value = null
     }
 })
 </script>
+
 
 <style scoped>
 .page {
@@ -154,13 +158,11 @@ watchEffect(async () => {
   transition: background-color 180ms ease, color 180ms ease;
 }
 
-/* muted text */
 .muted {
   color: var(--color-text-light);
   transition: color 180ms ease;
 }
 
-/* Cards */
 .card {
   background-color: var(--color-background-light);
   color: var(--color-text);
@@ -169,7 +171,6 @@ watchEffect(async () => {
   transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
 }
 
-/* Primary button (ej. Agendar) */
 .btn-primary {
   background-color: var(--color-primary-button-bg);
   color: var(--color-primary-button-text);
@@ -180,8 +181,6 @@ watchEffect(async () => {
   text-decoration: none;
 }
 
-
-/* Secondary/alt button (ej. Ver más) */
 .btn-alt {
   background-color: var(--color-background-light);
   color: var(--color-text);
@@ -192,15 +191,13 @@ watchEffect(async () => {
   cursor: pointer;
 }
 
-/* YouTube-like button in modal */
 .btn-youtube {
-  background-color: #ef4444; /* rojo YouTube */
+  background-color: #ef4444;
   color: #fff;
   text-decoration: none;
   transition: opacity 150ms ease;
 }
 
-/* Hero overlay: semitransparente sobre la imagen de fondo */
 .hero-overlay {
   position: absolute;
   inset: 0;
@@ -212,7 +209,6 @@ watchEffect(async () => {
   align-items: center;
 }
 
-/* Modal backdrop y modal */
 .modal-backdrop {
   background-color: rgba(0,0,0,0.6);
 }
@@ -225,7 +221,6 @@ watchEffect(async () => {
   transition: background-color 180ms ease, color 180ms ease;
 }
 
-/* Close button dentro del modal */
 .close-btn {
   background: transparent;
   border: none;
@@ -234,23 +229,20 @@ watchEffect(async () => {
   font-weight: 700;
 }
 
-/* Imágenes */
 img.rounded-md {
   object-fit: cover;
 }
 
-/* suavizado en enlaces/botones que usan colores del theme */
 .btn-primary:hover,
 .btn-alt:hover,
 .btn-youtube:hover {
   opacity: 0.9;
 }
 .hero-overlay .eslogan {
-  color: var(--color-text2); /* cambia la variable si prefieres otra */
+  color: var(--color-text2);
   transition: color 180ms ease;
 }
 
-/* asegurar que los textos con tamaño ya definidos mantengan contraste */
 h1{
     color: var(--color-text2)
 }

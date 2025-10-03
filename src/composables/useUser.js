@@ -1,18 +1,24 @@
 import { ref } from 'vue'
 
+// Composable para manejar usuarios desde la API simulada y localStorage
 export function useUsers() {
+  // Estado reactivo donde se almacenan los usuarios
   const users = ref([])
+  // Indica si se está realizando una petición
   const loading = ref(false)
+  // Almacena mensajes de error si ocurre un fallo en la API
   const error = ref(null)
 
-  const API_URL_GET = 'https://entertainflix.azure-api.net/users'
-  const API_URL_POST = 'https://entertainflix.azure-api.net/puser'
-  const LOCAL_STORAGE_KEY = 'myUsersData'
+  // Rutas de la API
+  const API_URL_GET = 'https://entertainflix.azure-api.net/users'   // Obtener todos los usuarios
+  const API_URL_POST = 'https://entertainflix.azure-api.net/puser'  // Registrar un nuevo usuario
+  const LOCAL_STORAGE_KEY = 'myUsersData'                           // Clave para cachear datos en localStorage
 
+  // Cargar todos los usuarios (intenta primero desde localStorage)
   async function loadAll({ force = false } = {}) {
-    // Leemos de localStorage primero para mantener los usuarios registrados
     const localData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY))
     if (localData && !force) {
+      // Si hay datos en cache y no se fuerza la recarga → usar localStorage
       users.value = localData
       return users.value
     }
@@ -20,19 +26,23 @@ export function useUsers() {
     loading.value = true
     error.value = null
     try {
+      // Configurar headers (incluyendo API KEY si existe en .env)
       const headers = { 'Content-Type': 'application/json' }
       const apiKey = import.meta.env.VITE_API_KEY
       if (apiKey) headers['Ocp-Apim-Subscription-Key'] = apiKey
 
+      // Petición GET a la API
       const res = await fetch(API_URL_GET, { headers })
       if (!res.ok) throw new Error(`HTTP ${res.status} - ${res.statusText}`)
       
+      // Guardar usuarios recibidos y almacenarlos en cache
       const data = await res.json()
       users.value = Array.isArray(data) ? data : (data.data || [])
-      
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(users.value))
+
       return users.value
     } catch (err) {
+      // Manejo de errores
       console.error('Error cargando users:', err)
       error.value = err.message || String(err)
       users.value = []
@@ -42,19 +52,19 @@ export function useUsers() {
     }
   }
 
-  // --- FUNCIÓN PARA REGISTRAR USUARIOS (POST SIMULADO) ---
+  // Registrar un nuevo usuario
   async function registerUser(newUserData) {
     loading.value = true
     error.value = null
     try {
-      // 1. Validar que el correo no exista ya
+      // Primero cargar lista actual de usuarios (para validar duplicados)
       await loadAll()
       const userExists = users.value.find(u => u.correo.toLowerCase() === newUserData.correo.toLowerCase())
       if (userExists) {
         throw new Error('El correo electrónico ya está registrado.')
       }
 
-      // 2. Llamada a la API de simulación (esta API devuelve el objeto con un ID)
+      // Petición POST a la API para crear el usuario
       const res = await fetch(API_URL_POST, {
         method: 'POST',
         headers: { 
@@ -63,19 +73,21 @@ export function useUsers() {
         },
         body: JSON.stringify(newUserData)
       })
-      if (res.status !== 201 && res.status !== 200) { // Aceptamos 201 Created o 200 OK
+
+      // Validar respuesta: debe ser 201 (Created) o 200 (OK)
+      if (res.status !== 201 && res.status !== 200) { 
         const errorBody = await res.text();
         throw new Error(`La API no confirmó el registro: ${res.statusText} - ${errorBody}`)
       }
       
+      // Tomar el usuario creado desde la API y asignarle un ID
       const createdUserApi = await res.json()
-
-      // 3. Añadimos el nuevo usuario a nuestra lista local y guardamos en localStorage
-      // Usamos los datos del formulario y el ID que nos dio la API simulada.
       const newUser = {
         ...newUserData,
         id: createdUserApi.id 
       }
+
+      // Guardar usuario en memoria y cache local
       users.value.push(newUser)
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(users.value))
       
@@ -83,15 +95,17 @@ export function useUsers() {
     } catch (err) {
       console.error('Error al registrar usuario:', err)
       error.value = err.message || String(err)
-      throw err // Re-lanzamos el error para que el componente lo capture
+      throw err 
     } finally {
       loading.value = false
     }
   }
   
+  // Obtener usuario por ID
   function getById(id) {
     return users.value.find(u => String(u.id) === String(id)) || null
   }
   
+  // Retornar funciones y estados para usarlos en los componentes
   return { users, loading, error, loadAll, getById, registerUser }
 }

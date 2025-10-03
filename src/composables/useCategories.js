@@ -1,46 +1,46 @@
 import { ref } from 'vue'
 
+// Composable para manejar categorías desde la API
 export function useCategories() {
+  // Estado reactivo donde se almacenan las categorías
   const categories = ref([])
+  // Indica si se está cargando información
   const loading = ref(false)
+  // Almacena mensajes de error si ocurre un fallo en la API
   const error = ref(null)
 
-  // URL del endpoint
+  // Endpoint de la API para obtener categorías
   const API_URL = 'https://entertainflix.azure-api.net/categories'
 
+  // Cargar todas las categorías (usa cache en memoria si ya se cargaron)
   async function loadAll({ force = false } = {}) {
-    // Si ya cargamos y no forzamos, devolvemos
+    // Si ya hay categorías cargadas y no se fuerza recarga → retornar las actuales
     if (categories.value.length && !force) return categories.value
 
     loading.value = true
     error.value = null
     try {
-      const headers = {
-        'Content-Type': 'application/json'
-      }
-
-      // si tu API requiere clave, usa la variable de entorno VITE_API_KEY
-      // y el nombre del header apropiado (ej: 'Ocp-Apim-Subscription-Key' o 'x-api-key')
+      // Headers de la petición (con API KEY si existe en .env)
+      const headers = { 'Content-Type': 'application/json' }
       const apiKey = import.meta.env.VITE_API_KEY
       if (apiKey) {
-        // Ajusta el nombre del header según tu configuración de Azure API Management
         headers['Ocp-Apim-Subscription-Key'] = apiKey
-        // o: headers['x-api-key'] = apiKey
       }
 
+      // Llamada a la API (GET)
       const res = await fetch(API_URL, { headers })
       if (!res.ok) {
         const text = await res.text().catch(() => '')
         throw new Error(`HTTP ${res.status} - ${text || res.statusText}`)
       }
 
+      // Guardar categorías obtenidas (asegurar formato de arreglo)
       const data = await res.json()
-
-      // Dices que la API devuelve la misma estructura que el JSON,
-      // así que asignamos directamente.
       categories.value = Array.isArray(data) ? data : (data.data || [])
+      
       return categories.value
     } catch (err) {
+      // Manejo de errores
       console.error('Error cargando categorías:', err)
       error.value = err.message || String(err)
       categories.value = []
@@ -50,10 +50,12 @@ export function useCategories() {
     }
   }
 
+  // Buscar categoría por ID
   function getById(id) {
     return categories.value.find(c => String(c.id) === String(id)) || null
   }
 
+  // Retornar estados y funciones para usarlos en componentes
   return {
     categories,
     loading,

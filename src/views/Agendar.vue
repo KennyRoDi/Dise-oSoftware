@@ -89,11 +89,15 @@ import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import { useServices } from '@/composables/useServices.js'
 
-// --- Lógica de datos ---
+/* --- Lógica de datos --- */
+// Obtener la ruta actual para leer params (id del servicio)
 const route = useRoute()
+// Desestructuramos el composable que maneja servicios: array reactivo, funciones y estados
 const { services, loadAll, getById, loading: isLoadingServicio, error: errorServicio } = useServices()
+// Ref para contener el servicio actual (según id)
 const servicio = ref(null)
 
+/* watchEffect: cuando cambie la ruta (id), recarga servicios y obtiene el servicio por id */
 watchEffect(async () => {
   const id = route.params.id
   if (id) {
@@ -102,7 +106,8 @@ watchEffect(async () => {
   }
 })
 
-// --- Lógica del formulario ---
+/* --- Lógica del formulario --- */
+/* Campos reactivos del formulario de agenda/solicitud */
 const nombre = ref('')
 const apellidos = ref('')
 const correo = ref('')
@@ -112,6 +117,7 @@ const paqueteSeleccionado = ref('')
 const comentarios = ref('')
 const fechaEvento = ref('')
 
+/* Lista estática de provincias de Costa Rica (para select) */
 const provinciasCR = [
   'Alajuela',
   'Cartago',
@@ -122,19 +128,24 @@ const provinciasCR = [
   'San José',
 ]
 
+/* Funcion que valida campos, crea el objeto solicitud y lo almacena en localStorage */
 function enviarSolicitud() {
+  // Validaciones básicas: campos obligatorios
   if (!nombre.value || !apellidos.value || !correo.value || !fechaEvento.value || !ubicacionSeleccionada.value || !paqueteSeleccionado.value) {
     alert('Por favor, completa todos los campos obligatorios (Nombre, Apellidos, Correo, Fecha, Ubicación, y selecciona un Paquete).');
     return;
   }
 
+  // Validación de teléfono (si se ingresó)
   if (telefono.value && !/^\d{8}$/.test(telefono.value)) {
     alert('Por favor, ingresa un número de teléfono válido de 8 dígitos.');
     return;
   }
 
+  // Generar id único para la solicitud
   const idUnico = Date.now() + Math.random().toString(36).substr(2, 9);
 
+  // Construcción del objeto solicitud (incluye título del servicio seleccionado)
   const nuevaSolicitud = {
     id: idUnico,
     cliente: `${nombre.value} ${apellidos.value}`,
@@ -148,10 +159,12 @@ function enviarSolicitud() {
     estado: 'pendiente',
   }
 
+  // Recuperar array existente de localStorage, agregar la nueva solicitud y guardarlo
   const almacenadas = JSON.parse(localStorage.getItem('todasLasSolicitudes') || '[]');
   almacenadas.push(nuevaSolicitud);
   localStorage.setItem('todasLasSolicitudes', JSON.stringify(almacenadas));
 
+  // Feedback al usuario y limpieza del formulario
   alert('¡Solicitud enviada correctamente!');
   nombre.value = '';
   apellidos.value = '';
@@ -163,23 +176,6 @@ function enviarSolicitud() {
   fechaEvento.value = '';
 }
 </script>
-
-<style scoped>
-/* Estilos opcionales para mejorar la UX de los paquetes */
-.paquete {
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--color-background-light);
-  border-radius: 0.375rem;
-  background-color: var(--color-background-light);
-  transition: all 180ms ease;
-  cursor: pointer;
-}
-.paquete-activo {
-  background-color: var(--color-primary-button-bg);
-  color: var(--color-primary-button-text);
-  border-color: var(--color-primary-button-bg);
-}
-</style>
 
 <style scoped>
 .page {

@@ -111,17 +111,6 @@
   </div>
 </template>
 
-Claro, aquí tienes el script de perfil.vue actualizado para que utilice la función deletePackage que acabamos de añadir al composable.
-
-Los cambios principales son dos:
-
-Se importa la función deletePackage desde useServices.
-
-La función eliminarPaquete se modifica para que sea async y llame a deletePackage, en lugar de manipular localStorage directamente.
-
-Script de perfil.vue (Actualizado con DELETE)
-Fragmento de código
-
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
@@ -130,40 +119,36 @@ import Footer from '@/components/Footer.vue'
 import PackageModal from '@/components/PackageModal.vue'
 import SolicitudCard from '@/components/SolicitudCard.vue'
 import { useProfiles } from '@/composables/useArtist.js'
-// 1. Importamos la nueva función 'deletePackage'
 import { useServices } from '@/composables/useServices.js'
 import comentariosData from '@/assets/json/comentarios.json'
 import solicitudesData from '@/assets/json/solicitudes.json'
 
-// --- ESTADO Y COMPOSABLES ---
+// --- Estado principal ---
 const route = useRoute()
 const { profiles, loadAll: loadAllProfiles, loading: loadingProfiles, error: errorProfiles } = useProfiles()
-// 2. Obtenemos 'deletePackage' junto con las otras funciones del composable
 const { services, loadAll: loadAllServices, loading: loadingServices, error: errorServices, addPackage, deletePackage } = useServices()
-
-const perfil = ref(null)
-const comentarios = ref(comentariosData)
-const todasLasSolicitudes = ref([])
-
+const perfil = ref(null)                              // Perfil actual
+const comentarios = ref(comentariosData)              // Comentarios cargados
+const todasLasSolicitudes = ref([])                   // Solicitudes activas
 const isLoading = computed(() => loadingProfiles.value || loadingServices.value)
 const error = computed(() => errorProfiles.value || errorServices.value)
-
-// --- ESTADO PARA EL MODAL (sin cambios) ---
-const mostrarModal = ref(false)
+const mostrarModal = ref(false)                       // Control del modal de paquetes
 const paqueteEditable = ref({ nombre: '', descripcion: '', precio: null })
-const editandoIndex = ref(null)
+const editandoIndex = ref(null)                       // Índice del paquete en edición
 
-// --- PROPIEDADES COMPUTADAS (sin cambios en su lógica) ---
+// --- Datos derivados ---
 const servicioAsociadoAlPerfil = computed(() => {
   if (!perfil.value || !services.value) return null
   return services.value.find(s => s.titulo.toLowerCase() === perfil.value.usuario.toLowerCase()) || null
 })
 
+// Reseñas asociadas al servicio del perfil
 const reseñasDelServicio = computed(() => {
   if (!servicioAsociadoAlPerfil.value) return []
   return comentarios.value.filter(c => c.servicio.toLowerCase() === servicioAsociadoAlPerfil.value.titulo.toLowerCase())
 })
 
+// Solicitudes gestionadas ordenadas por fecha
 const solicitudesGestionadas = computed(() => {
   if (!servicioAsociadoAlPerfil.value) return []
   return todasLasSolicitudes.value
@@ -171,7 +156,7 @@ const solicitudesGestionadas = computed(() => {
     .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
 })
 
-// --- LÓGICA DE SOLICITUDES (sin cambios) ---
+// --- Gestión de solicitudes ---
 function actualizarEstadoSolicitud(solicitudId, nuevoEstado) {
   const solicitudIndex = todasLasSolicitudes.value.findIndex(s => s.id === solicitudId)
   if (solicitudIndex !== -1) {
@@ -180,6 +165,7 @@ function actualizarEstadoSolicitud(solicitudId, nuevoEstado) {
   }
 }
 
+// Aceptar una solicitud y abrir email
 function aceptarSolicitud(solicitudId) {
   const solicitud = todasLasSolicitudes.value.find(s => s.id === solicitudId)
   if (!solicitud) return
@@ -191,6 +177,7 @@ function aceptarSolicitud(solicitudId) {
   window.location.href = mailtoLink
 }
 
+// Rechazar una solicitud y abrir email
 function rechazarSolicitud(solicitudId) {
   const solicitud = todasLasSolicitudes.value.find(s => s.id === solicitudId)
   if (!solicitud) return
@@ -203,10 +190,10 @@ function rechazarSolicitud(solicitudId) {
   actualizarEstadoSolicitud(solicitudId, 'rechazada')
 }
 
+// Restaurar las solicitudes a estado inicial
 function restaurarDatos() {
   if (confirm('¿Estás seguro de que quieres restaurar todas las solicitudes a su estado inicial?')) {
     localStorage.removeItem('todasLasSolicitudes')
-    
     const initialSolicitudes = solicitudesData.map(sol => ({
       ...sol,
       estado: 'pendiente',
@@ -218,7 +205,7 @@ function restaurarDatos() {
   }
 }
 
-// --- FUNCIONES CRUD PARA PAQUETES ---
+// --- Gestión de paquetes ---
 function abrirModalParaCrear() {
   editandoIndex.value = null
   paqueteEditable.value = { nombre: '', descripcion: '', precio: 0, video_youtube: '' }
@@ -235,8 +222,8 @@ function cerrarModal() {
   mostrarModal.value = false
 }
 
+// Guardar o actualizar un paquete
 async function guardarPaquete(paqueteActualizado) {
-  // Bloque IF para CREAR un paquete nuevo (usa el POST)
   if (editandoIndex.value === null) {
     if (!servicioAsociadoAlPerfil.value) {
       alert('Error: No se puede añadir un paquete sin un servicio asociado.')
@@ -250,9 +237,7 @@ async function guardarPaquete(paqueteActualizado) {
     } catch (err) {
       alert(`Error al guardar el paquete: ${err.message}`)
     }
-  } 
-  // Bloque ELSE para EDITAR (se queda como estaba, para el futuro PUT)
-  else {
+  } else {
     const indiceServicioActual = services.value.findIndex(s => s.id === servicioAsociadoAlPerfil.value.id)
     if (indiceServicioActual !== -1) {
       services.value[indiceServicioActual].paquetes[editandoIndex.value] = paqueteActualizado
@@ -262,18 +247,15 @@ async function guardarPaquete(paqueteActualizado) {
   }
 }
 
-// 3. --- FUNCIÓN 'eliminarPaquete' ACTUALIZADA PARA USAR EL COMPOSABLE ---
+// Eliminar un paquete
 async function eliminarPaquete(index) {
   if (confirm('¿Estás seguro de que quieres eliminar este paquete?')) {
     if (!servicioAsociadoAlPerfil.value) {
-      alert("Error: No se ha encontrado el servicio asociado.");
+      alert("Error: No se ha encontrado el servicio asociado.")
       return;
     }
-    
     const serviceId = servicioAsociadoAlPerfil.value.id;
-
     try {
-      // Llamamos a la nueva función del composable que hace el DELETE
       await deletePackage(serviceId, index);
       alert('Paquete eliminado exitosamente.');
     } catch (err) {
@@ -282,7 +264,7 @@ async function eliminarPaquete(index) {
   }
 }
 
-// --- HOOKS DE CICLO DE VIDA (sin cambios) ---
+// --- Carga de datos reactiva ---
 watch(
   () => route.params.usuario,
   async (newUsuario) => {
@@ -298,8 +280,8 @@ watch(
   { immediate: true }
 )
 
+// Inicialización de solicitudes al montar el componente
 onMounted(() => {
-  // Carga de solicitudes (desde localStorage o JSON, sin cambios)
   const storedSolicitudes = localStorage.getItem('todasLasSolicitudes')
   if (storedSolicitudes) {
     todasLasSolicitudes.value = JSON.parse(storedSolicitudes)
@@ -315,8 +297,8 @@ onMounted(() => {
 })
 </script>
 
+
 <style scoped>
-/* Page wrapper uses your theme variables (no cambios en themes.css) */
 .page {
   background-color: var(--color-body-bg);
   color: var(--color-text);
@@ -324,7 +306,6 @@ onMounted(() => {
   transition: background-color 180ms ease, color 180ms ease;
 }
 
-/* Perfil header card */
 .profile-card {
   background-color: var(--color-background-light);
   color: var(--color-text);
@@ -332,7 +313,6 @@ onMounted(() => {
   transition: background-color 180ms ease, color 180ms ease;
 }
 
-/* Generic card used for paquetes/reseñas/solicitudes */
 .card {
   background-color: var(--color-background-light);
   color: var(--color-text);
@@ -340,22 +320,18 @@ onMounted(() => {
   transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
 }
 
-/* Texto fuerte / títulos */
 .strong-text {
   color: var(--color-text);
 }
 
-/* Texto atenuado */
 .muted {
   color: var(--color-text-light);
 }
 
-/* Meta text small */
 .meta-text {
   color: var(--color-text-light);
 }
 
-/* Links */
 .link {
   color: var(--color-primary-button-bg);
   text-decoration: none;
@@ -364,7 +340,6 @@ onMounted(() => {
   text-decoration: underline;
 }
 
-/* Botones de acción */
 .btn-accept,
 .btn-reject,
 .btn-plain {
@@ -376,27 +351,24 @@ onMounted(() => {
   transition: transform 120ms ease, filter 120ms ease;
 }
 
-/* Accept */
 .btn-accept {
-  background-color: #16a34a; /* green-600 */
+  background-color: #16a34a; 
   color: #ffffff;
 }
 .btn-accept:hover {
-  background-color: #15803d; /* green-700 */
+  background-color: #15803d; 
   transform: translateY(-1px);
 }
 
-/* Reject */
 .btn-reject {
-  background-color: #dc2626; /* red-600 */
+  background-color: #dc2626;
   color: #ffffff;
 }
 .btn-reject:hover {
-  background-color: #b91c1c; /* red-700 */
+  background-color: #b91c1c;
   transform: translateY(-1px);
 }
 
-/* Plain small button (restaurar) */
 .btn-plain {
   background-color: var(--color-background-light);
   color: var(--color-text);
@@ -408,23 +380,19 @@ onMounted(() => {
   filter: brightness(0.98);
 }
 
-/* Empty card */
 .empty-card {
   background-color: var(--color-background-light);
   color: var(--color-text-light);
 }
 
-/* Ajustes de imagen y objeto-cover */
 img.object-cover {
   object-fit: cover;
 }
 
-/* Pequeñas utilidades */
 .transition-shadow {
   transition: box-shadow 160ms ease, transform 160ms ease;
 }
 
-/* Botón de editar */
 .btn-edit {
   padding: 0.5rem 0.75rem;
   border-radius: 0.375rem;
