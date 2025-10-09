@@ -15,7 +15,8 @@
   --color-background-light: #E5F9F9; 
   --color-text-light: #333; 
   --color-text2: #e5e7eb; 
-  --color-solicitud: #d5f2ea;
+  --color-solicitud: #fcfcfc;
+  --color-solicitudmsg: #ffffff;
   --color-eslogan-primary: #14e6e6;
   --color-eslogan-hover: rgba(68, 224, 229, 0.4);
   --color-text-button-slogan: black;
@@ -40,7 +41,8 @@ body.dark-mode {
   --color-background-light: #1A1F25; 
   --color-text-light: #e0e0e0; 
   --color-text2: #e5e7eb; 
-  --color-solicitud: #393E46;
+  --color-solicitud: #34363b;
+  --color-solicitudmsg: #3a3b3c;
   --color-eslogan-primary: #ee7422;
   --color-eslogan-hover: rgba(229, 122, 68, 0.4);
   --color-text-button-slogan: white;

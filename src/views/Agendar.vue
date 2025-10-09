@@ -13,14 +13,18 @@
         <div>
           <h2 class="text-3xl font-bold mb-4">Requisitos</h2>
           <p class="muted mb-4">
-            Se debe cumplir con la mayoría de estos para poder dar el servicio, caso de no cumplir con alguno,
-            indicarlo en la sección de comentarios.
+            Se debe cumplir con la mayoría de estos para poder dar el servicio, caso de no
+            cumplir con alguno, indicarlo en la sección de comentarios.
           </p>
           <ul class="list-disc list-inside">
             <li v-for="(req, i) in servicio.requisitos" :key="i">{{ req }}</li>
           </ul>
         </div>
-        <img :src="`/assets/images/${servicio.imagenes[1]}`" alt="Imagen presentación" class="rounded-md" />
+        <img
+          :src="`/assets/images/${servicio.imagenes[1]}`"
+          alt="Imagen presentación"
+          class="rounded-md"
+        />
       </section>
 
       <section class="px-4 py-12 max-w-4xl mx-auto">
@@ -28,18 +32,28 @@
         <form @submit.prevent="enviarSolicitud" class="space-y-6">
           <div class="grid md:grid-cols-2 gap-4">
             <input v-model="nombre" type="text" placeholder="Nombre" class="input" />
-            <input v-model="apellidos" type="text" placeholder="Apellidos" class="input" />
+            <input
+              v-model="apellidos"
+              type="text"
+              placeholder="Apellidos"
+              class="input"
+            />
           </div>
 
-          <input v-model="correo" type="email" placeholder="Correo electrónico" class="input" />
+          <input
+            v-model="correo"
+            type="email"
+            placeholder="Correo electrónico"
+            class="input"
+          />
 
-          <input 
-            v-model="telefono" 
-            type="tel" 
-            placeholder="Número telefónico" 
-            class="input" 
+          <input
+            v-model="telefono"
+            type="tel"
+            placeholder="Número telefónico"
+            class="input"
             pattern="[0-9]{8}"
-            title="Por favor, ingresa un número de teléfono válido de 8 dígitos." 
+            title="Por favor, ingresa un número de teléfono válido de 8 dígitos."
           />
 
           <input v-model="fechaEvento" type="date" placeholder="Fecha" class="input" />
@@ -52,20 +66,20 @@
           </select>
 
           <div class="flex flex-wrap gap-2">
-            <span 
-              v-for="(paq, i) in servicio.paquetes" 
-              :key="i" 
+            <span
+              v-for="(paq, i) in servicio.paquetes"
+              :key="i"
               @click="paqueteSeleccionado = paq.nombre"
-              class="paquete cursor-pointer" 
+              class="paquete cursor-pointer"
               :class="{ 'paquete-activo': paqueteSeleccionado === paq.nombre }"
             >
               {{ paq.nombre }}
             </span>
           </div>
 
-          <textarea 
-            v-model="comentarios" 
-            rows="4" 
+          <textarea
+            v-model="comentarios"
+            rows="4"
             class="input"
             placeholder="Comentarios"
           ></textarea>
@@ -74,62 +88,75 @@
         </form>
       </section>
     </div>
-    <div v-else class="text-center text-xl py-20">
-      Servicio no encontrado.
-    </div>
+    <div v-else class="text-center text-xl py-20">Servicio no encontrado.</div>
 
     <Footer />
   </div>
 </template>
 
 <script setup>
-import { ref, watchEffect } from 'vue'
-import { useRoute } from 'vue-router'
-import Navbar from '@/components/Navbar.vue'
-import Footer from '@/components/Footer.vue'
-import { useServices } from '@/composables/useServices.js'
+import { ref, watchEffect } from "vue";
+import { useRoute } from "vue-router";
+import Navbar from "@/components/Navbar.vue";
+import Footer from "@/components/Footer.vue";
+import { useServices } from "@/composables/useServices.js";
 
 // --- Lógica de datos ---
-const route = useRoute()
-const { services, loadAll, getById, loading: isLoadingServicio, error: errorServicio } = useServices()
-const servicio = ref(null)
+const route = useRoute();
+const {
+  services,
+  loadAll,
+  getById,
+  loading: isLoadingServicio,
+  error: errorServicio,
+} = useServices();
+const servicio = ref(null);
 
 watchEffect(async () => {
-  const id = route.params.id
+  const id = route.params.id;
   if (id) {
-    await loadAll()
-    servicio.value = getById(id)
+    await loadAll();
+    servicio.value = getById(id);
   }
-})
+});
 
 // --- Lógica del formulario ---
-const nombre = ref('')
-const apellidos = ref('')
-const correo = ref('')
-const telefono = ref('')
-const ubicacionSeleccionada = ref('')
-const paqueteSeleccionado = ref('')
-const comentarios = ref('')
-const fechaEvento = ref('')
+const nombre = ref("");
+const apellidos = ref("");
+const correo = ref("");
+const telefono = ref("");
+const ubicacionSeleccionada = ref("");
+const paqueteSeleccionado = ref("");
+const comentarios = ref("");
+const fechaEvento = ref("");
 
 const provinciasCR = [
-  'Alajuela',
-  'Cartago',
-  'Guanacaste',
-  'Heredia',
-  'Limón',
-  'Puntarenas',
-  'San José',
-]
+  "Alajuela",
+  "Cartago",
+  "Guanacaste",
+  "Heredia",
+  "Limón",
+  "Puntarenas",
+  "San José",
+];
 
 function enviarSolicitud() {
-  if (!nombre.value || !apellidos.value || !correo.value || !fechaEvento.value || !ubicacionSeleccionada.value || !paqueteSeleccionado.value) {
-    alert('Por favor, completa todos los campos obligatorios (Nombre, Apellidos, Correo, Fecha, Ubicación, y selecciona un Paquete).');
+  if (
+    !nombre.value ||
+    !apellidos.value ||
+    !correo.value ||
+    !fechaEvento.value ||
+    !ubicacionSeleccionada.value ||
+    !paqueteSeleccionado.value
+  ) {
+    alert(
+      "Por favor, completa todos los campos obligatorios (Nombre, Apellidos, Correo, Fecha, Ubicación, y selecciona un Paquete)."
+    );
     return;
   }
 
   if (telefono.value && !/^\d{8}$/.test(telefono.value)) {
-    alert('Por favor, ingresa un número de teléfono válido de 8 dígitos.');
+    alert("Por favor, ingresa un número de teléfono válido de 8 dígitos.");
     return;
   }
 
@@ -145,22 +172,22 @@ function enviarSolicitud() {
     ubicacion: ubicacionSeleccionada.value,
     servicio: servicio.value.titulo,
     paquete: paqueteSeleccionado.value,
-    estado: 'pendiente',
-  }
+    estado: "pendiente",
+  };
 
-  const almacenadas = JSON.parse(localStorage.getItem('todasLasSolicitudes') || '[]');
+  const almacenadas = JSON.parse(localStorage.getItem("todasLasSolicitudes") || "[]");
   almacenadas.push(nuevaSolicitud);
-  localStorage.setItem('todasLasSolicitudes', JSON.stringify(almacenadas));
+  localStorage.setItem("todasLasSolicitudes", JSON.stringify(almacenadas));
 
-  alert('¡Solicitud enviada correctamente!');
-  nombre.value = '';
-  apellidos.value = '';
-  correo.value = '';
-  telefono.value = '';
-  ubicacionSeleccionada.value = '';
-  paqueteSeleccionado.value = '';
-  comentarios.value = '';
-  fechaEvento.value = '';
+  alert("¡Solicitud enviada correctamente!");
+  nombre.value = "";
+  apellidos.value = "";
+  correo.value = "";
+  telefono.value = "";
+  ubicacionSeleccionada.value = "";
+  paqueteSeleccionado.value = "";
+  comentarios.value = "";
+  fechaEvento.value = "";
 }
 </script>
 
