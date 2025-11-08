@@ -42,7 +42,7 @@
                 </div>
 
                 <button type="submit" class="bg-black text-white px-6 py-2 rounded font-semibold hover:bg-gray-800">
-                    Enviar solicitud
+                    Enviar Solicitud
                 </button>
             </form>
         </section>

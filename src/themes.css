@@ -1,39 +1,49 @@
 /* Colores para el modo claro por defecto */
 :root {
-  --color-header-bg: #4cb5a2; 
-  --color-header-text: #ffffff;
-  --color-body-bg: #e3f5ef; 
-  --color-text: #374151; 
-  --color-primary-button-bg: #000000; 
-  --color-primary-button-text: #ffffff; 
-  --color-secondary-button-bg: #001b29; 
+  --color-header-bg: #E6FBFB; 
+  --color-menu-display: #ebf8f8;
+  --color-header-text: #1F2937;
+  --color-body-bg: #F5F9FA; 
+  --color-text: #1F2937; 
+  --color-primary-button-bg: #14e6e6; 
+  --color-primary-button-text: #1F2937; 
+  --color-secondary-button-bg: #E0F7F7; /*#0DC7C7*/
   --color-secondary-button-text: #001b29; 
-  --color-footer-bg: #4cb5a2; 
-  --color-footer-text: #ffffff; 
-  --color-footer-heading: #ffffff; 
-  --color-background-light: #92ddca; 
+  --color-footer-bg: #E6FBFB; 
+  --color-footer-text: #1F2937; 
+  --color-footer-heading: #1F2937; 
+  --color-background-light: #E5F9F9; 
   --color-text-light: #333; 
-
   --color-text2: #e5e7eb; 
-  --color-solicitud: #d5f2ea;
+  --color-solicitud: #fcfcfc;
+  --color-solicitudmsg: #ffffff;
+  --color-eslogan-primary: #14e6e6;
+  --color-eslogan-hover: rgba(68, 224, 229, 0.4);
+  --color-text-button-slogan: black;
 }
 
 /* Colores para el modo oscuro */
 body.dark-mode {
-  --color-header-bg: #000e14; 
-  --color-header-text: #e5e7eb; 
+  --color-menu-display: #090c0f;
+  --color-header-bg: #090c0f; 
+  --color-header-text: #E6E6E6; 
+  --color-footer-bg: #090c0f; 
+  --color-footer-text: #E6E6E6; 
 
-  --color-body-bg: #00111a; 
-  --color-text: #e5e7eb; 
-  --color-primary-button-bg: #ffffff; 
-  --color-primary-button-text: #000000; 
-  --color-secondary-button-bg: #173646; 
-  --color-secondary-button-text: #ffffff; 
-  --color-footer-bg: #000e14; 
-  --color-footer-text: #d1d5db; 
+  --color-body-bg: #0D1117; 
+  --color-text: #E6E6E6; 
+  --color-primary-button-bg: #ee7422; 
+  --color-primary-button-text: white; 
+  --color-secondary-button-bg: #393E46; 
+  --color-secondary-button-text: #F3F4F6; 
+
   --color-footer-heading: #f3f4f6; 
-  --color-background-light: #152832; 
+  --color-background-light: #1A1F25; 
   --color-text-light: #e0e0e0; 
   --color-text2: #e5e7eb; 
-  --color-solicitud: #23313f;
+  --color-solicitud: #34363b;
+  --color-solicitudmsg: #3a3b3c;
+  --color-eslogan-primary: #ee7422;
+  --color-eslogan-hover: rgba(229, 122, 68, 0.4);
+  --color-text-button-slogan: white;
 }
