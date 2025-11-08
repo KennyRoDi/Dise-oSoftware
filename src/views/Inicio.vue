@@ -1,6 +1,6 @@
 <template>
   <div class="page font-sans">
-    <Navbar />
+    <Banner />
 
     <section class="text-center px-4 py-12">
       <h2 class="text-3xl font-bold mb-4">Conecta con servicios de entretenimiento</h2>
@@ -97,6 +97,7 @@ import ServiceCard from '@/components/ServiceCard.vue'
 import comentariosData from '@/assets/json/comentarios.json'
 import { useCategories } from '@/composables/useCategories.js'
 import { useServices } from '@/composables/useServices.js'
+import Banner from '../components/Banner.vue'
 
 const { categories, loading: loadingCategories, error: errorCategories, loadAll: loadAllCategories } = useCategories()
 const { services, loading: loadingServices, error: errorServices, loadAll: loadAllServices } = useServices()
