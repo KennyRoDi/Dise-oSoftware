@@ -30,12 +30,12 @@
       <section class="px-4 py-12 max-w-4xl mx-auto">
         <h2 class="text-2xl font-bold mb-6">Envía tu solicitud</h2>
         <form @submit.prevent="enviarSolicitud" class="space-y-6">
-          <div class="grid md:grid-cols-2 gap-4">
-            <input v-model="nombre" type="text" placeholder="Nombre" class="input" />
+          
+          <div>
             <input
-              v-model="apellidos"
+              v-model="nombre"
               type="text"
-              placeholder="Apellidos"
+              placeholder="Nombre completo"
               class="input"
             />
           </div>
@@ -100,6 +100,8 @@ import { useRoute } from "vue-router";
 import Navbar from "@/components/Navbar.vue";
 import Footer from "@/components/Footer.vue";
 import { useServices } from "@/composables/useServices.js";
+import { useAuth } from "@/composables/useAuth.js"; // Para saber QUIÉN está logueado
+import { useUsers } from "@/composables/useUser.js"; // ⭐️ Para OBTENER los datos del usuario
 
 // --- Lógica de datos ---
 const route = useRoute();
@@ -112,7 +114,11 @@ const {
 } = useServices();
 const servicio = ref(null);
 
-/* watchEffect: cuando cambie la ruta (id), recarga servicios y obtiene el servicio por id */
+// --- Lógica de Usuarios (para auto-rellenado) ---
+const { usuario } = useAuth(); // Datos básicos de sesión
+const { users, loadAll: loadAllUsers } = useUsers(); // Lista completa de usuarios
+
+/* watchEffect: carga el servicio (sin cambios) */
 watchEffect(async () => {
   const id = route.params.id;
   if (id) {
@@ -123,7 +129,7 @@ watchEffect(async () => {
 
 // --- Lógica del formulario ---
 const nombre = ref("");
-const apellidos = ref("");
+// const apellidos = ref(""); // ⭐️ ELIMINADO
 const correo = ref("");
 const telefono = ref("");
 const ubicacionSeleccionada = ref("");
@@ -131,7 +137,34 @@ const paqueteSeleccionado = ref("");
 const comentarios = ref("");
 const fechaEvento = ref("");
 
-/* Lista estática de provincias de Costa Rica (para select) */
+/* ⭐️ NUEVO watchEffect: Para auto-rellenar el formulario ⭐️ */
+watchEffect(async () => {
+  // 1. Cargar la lista de usuarios de la API (solo si no se ha cargado)
+  if (users.value.length === 0) {
+    await loadAllUsers(); 
+  }
+
+  // 2. Si hay un usuario logueado (de useAuth)
+  if (usuario.value) {
+    // 3. Encontrar los detalles completos de ese usuario en la lista de useUsers
+    // (Buscamos por ID, que es más fiable)
+    const fullUserDetails = users.value.find(u => u.id === usuario.value.id);
+    
+    if (fullUserDetails) {
+      // 4. Rellenar el formulario
+      nombre.value = fullUserDetails.nombre;
+      correo.value = fullUserDetails.correo;
+      telefono.value = fullUserDetails.contacto ? fullUserDetails.contacto.toString() : "";
+    } else {
+      // Fallback si no se encuentra (usa datos básicos de useAuth)
+      nombre.value = usuario.value.nombre;
+      correo.value = usuario.value.correo;
+    }
+  }
+});
+
+
+/* Lista estática de provincias de Costa Rica (sin cambios) */
 const provinciasCR = [
   "Alajuela",
   "Cartago",
@@ -142,57 +175,72 @@ const provinciasCR = [
   "San José",
 ];
 
-function enviarSolicitud() {
+// =================================================================
+// ⭐️ FUNCIÓN DE ENVÍO AL MICROSERVICIO (ACTUALIZADA) ⭐️
+// =================================================================
+async function enviarSolicitud() {
+  // 1. Validación (actualizada sin apellidos)
   if (
     !nombre.value ||
-    !apellidos.value ||
     !correo.value ||
     !fechaEvento.value ||
     !ubicacionSeleccionada.value ||
     !paqueteSeleccionado.value
   ) {
     alert(
-      "Por favor, completa todos los campos obligatorios (Nombre, Apellidos, Correo, Fecha, Ubicación, y selecciona un Paquete)."
+      "Por favor, completa todos los campos obligatorios."
     );
     return;
   }
-
-  // Validación de teléfono (si se ingresó)
   if (telefono.value && !/^\d{8}$/.test(telefono.value)) {
     alert("Por favor, ingresa un número de teléfono válido de 8 dígitos.");
     return;
   }
 
-  // Generar id único para la solicitud
-  const idUnico = Date.now() + Math.random().toString(36).substr(2, 9);
-
-  // Construcción del objeto solicitud (incluye título del servicio seleccionado)
+  // 2. Construcción del objeto solicitud (actualizado)
   const nuevaSolicitud = {
-    id: idUnico,
-    cliente: `${nombre.value} ${apellidos.value}`,
+    cliente: nombre.value, // ⭐️ CAMBIADO (antes era nombre + apellido)
     correo: correo.value,
     telefono: telefono.value,
     mensaje: comentarios.value,
     fecha: fechaEvento.value,
     ubicacion: ubicacionSeleccionada.value,
-    servicio: servicio.value.titulo,
     paquete: paqueteSeleccionado.value,
-    estado: "pendiente",
+    
+    // Datos clave (sin cambios)
+    servicioTitulo: servicio.value.titulo, 
+    artistaUsuario: servicio.value.titulo
   };
 
-  const almacenadas = JSON.parse(localStorage.getItem("todasLasSolicitudes") || "[]");
-  almacenadas.push(nuevaSolicitud);
-  localStorage.setItem("todasLasSolicitudes", JSON.stringify(almacenadas));
+  // 3. Envío de datos al Microservicio (Express)
+  try {
+    const response = await fetch('http://localhost:3001/api/solicitudes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(nuevaSolicitud),
+    });
 
-  alert("¡Solicitud enviada correctamente!");
-  nombre.value = "";
-  apellidos.value = "";
-  correo.value = "";
-  telefono.value = "";
-  ubicacionSeleccionada.value = "";
-  paqueteSeleccionado.value = "";
-  comentarios.value = "";
-  fechaEvento.value = "";
+    if (!response.ok) {
+      throw new Error(`Error del servidor: ${response.statusText}`);
+    }
+
+    // 4. Éxito y reseteo del formulario
+    alert("¡Solicitud enviada correctamente a la API!");
+    
+    // Reseteamos solo los campos del evento
+    // (No reseteamos nombre, correo, telefono)
+    ubicacionSeleccionada.value = "";
+    paqueteSeleccionado.value = "";
+    comentarios.value = "";
+    fechaEvento.value = "";
+
+  } catch (error) {
+    // 5. Manejo de errores
+    console.error("Error al enviar la solicitud:", error);
+    alert("Hubo un error al enviar la solicitud. Asegúrate de que el microservicio esté corriendo en 'http://localhost:3001'.");
+  }
 }
 </script>
 
