@@ -30,26 +30,37 @@ npm run dev
 
 ## Capturas de pantalla del sistema en funcionamiento.
 
-#### Modo claro:
+#### Página de inicio (oscuro):
 
-<img width="900" height="600" alt="Screenshot 2025-09-26 183019" src="https://github.com/user-attachments/assets/e6b42b1b-ccfe-4033-9b34-9ab9e87038d0" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/be672d93-3658-409d-9696-11e033da18b5" />
 
-#### Modo oscuro:
+#### Página de inicio (claro):
 
-<img width="900" height="600" alt="Screenshot 2025-09-26 183028" src="https://github.com/user-attachments/assets/fc66b991-0fb6-41ac-a63c-ab4c97b281f5" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/312344b8-3e5d-4f5e-bb83-47eaecaab34c" />
 
-#### Perfil de oferente:
+#### Perfil de oferente (oscuro):
 
-<img width="900" height="600" alt="Screenshot 2025-09-26 183146" src="https://github.com/user-attachments/assets/8a80394a-f0d8-4be8-b256-342c96ff4261" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/a296daab-9779-450b-82ac-03781c245915" />
 
-#### Perfil de contratista:
+### Perfil de oferente (claro):
 
-<img width="900" height="600" alt="Screenshot 2025-09-26 183940" src="https://github.com/user-attachments/assets/8391fe23-87f4-4548-9c3d-b2e262408a7d" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/8851aed8-a490-47f1-869e-88b64ad9b28a" />
 
-#### Ventana de inicio y registro
+#### Perfil de contratista (oscuro):
 
-<img width="900" height="600" alt="image" src="https://github.com/user-attachments/assets/c6e7f975-1f1d-44c9-8daf-8b6598367573" />   <img width="900" height="600" alt="Screenshot 2025-09-26 183045" src="https://github.com/user-attachments/assets/369f0fe7-d6a4-42c2-a883-206d4e597cb6" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/a042ca41-dea7-4d76-aff5-2e66ec813bf4" />
 
+#### Perfil de contratista (claro):
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/0b7a2fa2-268f-4beb-b4d8-12fe1d413031" />
+
+#### Ventana de inicio y registro (oscuro):
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/e7c8a686-4ba1-474a-b978-bec51f585c62" />
+
+#### Ventana de inicio y registro (claro):
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/01e6c011-f34f-4dd2-a703-d2df7f8dccb1" />
 
 ## Estructura del repositorio:
 
