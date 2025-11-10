@@ -32,7 +32,9 @@
               style="border-color: var(--color-body-bg)"
             />
             <div class="profile-card p-6 rounded shadow text-center -mt-18">
-              <h3 class="text-2xl font-bold strong-text">{{ perfil.usuario }}</h3>
+              <h3 class="text-2xl font-bold strong-text">
+                {{ perfil.usuario }}
+              </h3>
               <hr class="dropdown-divider" />
               <p class="muted mt-2">{{ perfil.descripcion }}</p>
               <p class="meta-text text-sm mt-2">
@@ -44,13 +46,19 @@
 
         <div class="max-w-6xl mx-auto mt-12 px-4">
           <nav class="menuPerfil flex space-x-8">
-            <router-link :to="{ name: 'paquetesPerfil' }" class="py-4 px-1 text-lg"
+            <router-link
+              :to="{ name: 'paquetesPerfil' }"
+              class="py-4 px-1 text-lg"
               >Paquetes</router-link
             >
-            <router-link :to="{ name: 'resenasPerfil' }" class="py-4 px-1 text-lg"
+            <router-link
+              :to="{ name: 'resenasPerfil' }"
+              class="py-4 px-1 text-lg"
               >Reseñas</router-link
             >
-            <router-link :to="{ name: 'solicitudesPerfil' }" class="py-4 px-1 text-lg"
+            <router-link
+              :to="{ name: 'solicitudesPerfil' }"
+              class="py-4 px-1 text-lg"
               >Solicitudes</router-link
             >
           </nav>
@@ -93,16 +101,11 @@ import { useRoute } from "vue-router";
 import Navbar from "@/components/Navbar.vue";
 import Footer from "@/components/Footer.vue";
 import PackageModal from "@/components/PackageModal.vue";
-// SolicitudCard ya no se importa aquí, porque lo hace SolicitudesComponent.vue
 import { useProfiles } from "@/composables/useArtist.js";
 import { useServices } from "@/composables/useServices.js";
 import comentariosData from "@/assets/json/comentarios.json";
 import solicitudesData from "@/assets/json/solicitudes.json";
 import { useTheme } from "@/composables/useTheme.js";
-
-// --- TODA LA LÓGICA (script) SE MANTIENE EXACTAMENTE IGUAL ---
-// No es necesario copiarla de nuevo, ya que no cambia.
-// El componente PerfilView sigue siendo el "cerebro" que maneja toda la data.
 
 const { isDark } = useTheme();
 const route = useRoute();
@@ -123,38 +126,61 @@ const {
 const perfil = ref(null);
 const comentarios = ref(comentariosData);
 const todasLasSolicitudes = ref([]);
-const isLoading = computed(() => loadingProfiles.value || loadingServices.value);
+const isLoading = computed(
+  () => loadingProfiles.value || loadingServices.value
+);
 const error = computed(() => errorProfiles.value || errorServices.value);
 const mostrarModal = ref(false);
 const paqueteEditable = ref({ nombre: "", descripcion: "", precio: null });
 const editandoIndex = ref(null);
+
+
 const servicioAsociadoAlPerfil = computed(() => {
-  if (!perfil.value || !services.value) return null;
+  if (!perfil.value || !services.value || !perfil.value.usuario) return null;
+
+  const perfilUsuarioLower = perfil.value.usuario.toLowerCase();
+
   return (
-    services.value.find(
-      (s) => s.titulo.toLowerCase() === perfil.value.usuario.toLowerCase()
-    ) || null
+    services.value.find((s) => {
+      const serviceTitle = (s?.titulo || "").toLowerCase();
+      return serviceTitle === perfilUsuarioLower;
+    }) || null
   );
 });
+
 const reseñasDelServicio = computed(() => {
-  if (!servicioAsociadoAlPerfil.value) return [];
+  if (!servicioAsociadoAlPerfil.value) return []; 
+  const servicioTituloLower = (
+    servicioAsociadoAlPerfil.value?.titulo || ""
+  ).toLowerCase();
+
   return comentarios.value.filter(
-    (c) =>
-      c.servicio.toLowerCase() === servicioAsociadoAlPerfil.value.titulo.toLowerCase()
+    (
+      c 
+    ) => (c?.servicio || "").toLowerCase() === servicioTituloLower
   );
 });
+
 const solicitudesGestionadas = computed(() => {
   if (!servicioAsociadoAlPerfil.value) return [];
+
+  const servicioTituloLower = (
+    servicioAsociadoAlPerfil.value?.titulo || ""
+  ).toLowerCase();
+
   return todasLasSolicitudes.value
     .filter(
-      (sol) =>
-        sol.servicio.toLowerCase() === servicioAsociadoAlPerfil.value.titulo.toLowerCase()
+      (
+        sol
+      ) => (sol?.servicio || "").toLowerCase() === servicioTituloLower
     )
     .sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 });
 
 function actualizarEstadoSolicitud(solicitudId, nuevoEstado) {
-  const solicitudIndex = todasLasSolicitudes.value.findIndex((s) => s.id === solicitudId);
+  const solicitudIndex = todasLasSolicitudes.value.findIndex(
+    (s) => s.id === solicitudId
+  );
   if (solicitudIndex !== -1) {
     todasLasSolicitudes.value[solicitudIndex].estado = nuevoEstado;
     localStorage.setItem(
@@ -174,7 +200,9 @@ function aceptarSolicitud(solicitudId) {
     solicitud.cliente
   },\n\n¡Nos complace informarle que su solicitud para el paquete "${
     solicitud.paquete
-  }" ha sido ACEPTADA!...\n\nSaludos cordiales,\n${perfil.value?.usuario || "El equipo"}`;
+  }" ha sido ACEPTADA!...\n\nSaludos cordiales,\n${
+    perfil.value?.usuario || "El equipo"
+  }`;
   const mailtoLink = `mailto:${solicitud.correo}?subject=${encodeURIComponent(
     asunto
   )}&body=${encodeURIComponent(cuerpo)}`;
@@ -222,7 +250,12 @@ function restaurarDatos() {
 
 function abrirModalParaCrear() {
   editandoIndex.value = null;
-  paqueteEditable.value = { nombre: "", descripcion: "", precio: 0, video_youtube: "" };
+  paqueteEditable.value = {
+    nombre: "",
+    descripcion: "",
+    precio: 0,
+    video_youtube: "",
+  };
   mostrarModal.value = true;
 }
 
@@ -255,9 +288,8 @@ async function guardarPaquete(paqueteActualizado) {
       (s) => s.id === servicioAsociadoAlPerfil.value.id
     );
     if (indiceServicioActual !== -1) {
-      services.value[indiceServicioActual].paquetes[
-        editandoIndex.value
-      ] = paqueteActualizado;
+      services.value[indiceServicioActual].paquetes[editandoIndex.value] =
+        paqueteActualizado;
       localStorage.setItem("myServicesData", JSON.stringify(services.value));
       cerrarModal();
     }
@@ -267,7 +299,7 @@ async function guardarPaquete(paqueteActualizado) {
 async function eliminarPaquete(index) {
   if (confirm("¿Estás seguro de que quieres eliminar este paquete?")) {
     if (!servicioAsociadoAlPerfil.value) {
-      alert("Error: No se ha encontrado el servicio asociado.")
+      alert("Error: No se ha encontrado el servicio asociado.");
       return;
     }
     const serviceId = servicioAsociadoAlPerfil.value.id;
@@ -313,9 +345,7 @@ onMounted(() => {
 });
 </script>
 
-
 <style scoped>
-
 .router-link-exact-active {
   border-bottom: 3px solid var(--color-primary-button-bg);
   color: var(--color-text);
@@ -366,7 +396,8 @@ nav a {
   background-color: var(--color-background-light);
   color: var(--color-text);
   border: 1px solid transparent;
-  transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
+  transition: background-color 180ms ease, color 180ms ease,
+    transform 180ms ease;
 }
 
 .strong-text {
@@ -401,11 +432,11 @@ nav a {
 }
 
 .btn-accept {
-  background-color: #16a34a; 
+  background-color: #16a34a;
   color: #ffffff;
 }
 .btn-accept:hover {
-  background-color: #15803d; 
+  background-color: #15803d;
   transform: translateY(-1px);
 }
 

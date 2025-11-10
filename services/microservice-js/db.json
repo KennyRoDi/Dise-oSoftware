@@ -1,29 +1,4 @@
 {
   "solicitudes": [
-    {
-      "cliente": "CamiFlow dsaada",
-      "correo": "sdadad@asda.com",
-      "telefono": "12345678",
-      "mensaje": "sd",
-      "fecha": "2025-11-14",
-      "ubicacion": "Cartago",
-      "paquete": "Boda estándar",
-      "artista": "CamiFlow",
-      "id": "1762669076506",
-      "estado": "pendiente"
-    },
-    {
-      "cliente": "CamiFlow",
-      "correo": "camiflow@music.com",
-      "telefono": "88883456",
-      "mensaje": "vbvxb",
-      "fecha": "2025-11-13",
-      "ubicacion": "Cartago",
-      "paquete": "Fiesta premium",
-      "servicioTitulo": "CamiFlow",
-      "artistaUsuario": "CamiFlow",
-      "id": "1762669363941",
-      "estado": "pendiente"
-    }
   ]
 }
