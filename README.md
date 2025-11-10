@@ -14,7 +14,9 @@ La plataforma garantiza un flujo de trabajo asistido, desde la gestión de perfi
 ```bash
 git clone https://github.com/KennyRoDi/Dise-oSoftware.git
 
-cd Dise-oSoftware
+cd Entertainflix
+cd services
+cd microservice-frontend
 ```
 **Instalar dependencias**
 ```bash
@@ -51,78 +53,87 @@ npm run dev
 
 ## Estructura del repositorio:
 
-```plaintext
-.
-├── .github/workflows/                                     # Configuración para CI/CD en GitHub Actions
-│   └── azure-static-web-apps-white-pebble-0f617fd0f.yml   # Despliegue en Azure
-│
-├── .vscode/                         # Configuración recomendada para VSCode
-│   └── extensions.json
-│
-├── public/                          # Archivos públicos accesibles
-│   └── assets/images/               # Imágenes estáticas
-│   └── vite.svg
-│
-├── src/                             # Código fuente principal
-│   ├── assets/                      # Recursos del proyecto
-│   │   └── json/                    # Archivos de datos estáticos
-│   │
-│   ├── components/                  # Componentes reutilizables
-│   │   ├── Footer.vue
-│   │   ├── Navbar.vue
-│   │   └── ThemeSwitcher.vue
-│   │
-│   ├── composables/                 # Lógica reutilizable (hooks)
-│   │   └── useAuth.js
-│   │
-│   ├── router/                      # Configuración de rutas
-│   │   └── index.js
-│   │
-│   ├── views/                       # Vistas/páginas principales
-│   │   ├── Agendar.vue
-│   │   ├── AgendarPrevista.vue
-│   │   ├── CatalogoCategoria.vue
-│   │   ├── Categorias.vue
-│   │   ├── Chat.vue
-│   │   ├── Cliente.vue
-│   │   ├── Detalle.vue
-│   │   ├── DetallePrevista.vue
-│   │   ├── Inicio.vue
-│   │   ├── InicioSesion.vue
-│   │   ├── Perfil.vue
-│   │   ├── Registro.vue
-│   │   ├── Revision.vue
-│   │   ├── Servicios.vue
-│   │   └── Solicitudes.vue
-│   │
-│   ├── App.vue                      # Componente raíz de la aplicación
-│   ├── main.js                      # Punto de entrada de la app
-│   ├── style.css                    # Estilos globales
-│   └── themes.css                   # Definición de temas
-│
-├── .gitignore                       # Archivos/carpetas ignorados por Git
-├── README.md                        # Documentación principal
-└── index.html                       # Archivo HTML base
-
+```bash
+EntertainFlix/
+└── services/
+    ├── microservice-frontend/
+    │── .github/
+    │   └── workflows/
+    │── .vscode/
+    │── public/
+    │   └── assets/
+    │       └── images/   
+    │   └── vite.svg
+    │
+    │── src/
+    │   ├── assets/
+    │   │   └── json/     
+    │   ├── components/   
+    │   ├── composables/
+    │   │   └── useAuth.js
+    │   ├── router/
+    │   │   └── index.js
+    │   ├── views/        
+    │   ├── App.vue      
+    │   ├── main.js
+    │   ├── style.css
+    │   └── themes.css
+    │
+    │── .gitignore
+    │── README.md
+    │── index.html
+    │── package.json
+    │── vite.config.js
+    │── tailwind.config.js
+    ├── microservice-java/
+    ├── microservice-js/
+    └── microservice-py/
 ```
 ## Referencias bibliográficas.
+Broadcom. (s.f.). Spring Boot. Spring. Recuperado de: https://spring.io/projects/spring-boot#overview 
 
-GitHub Docs. (s.f.). Actions. GitHub. Recuperado de: https://docs.github.com/en/actions
+DevDocs. (s.f.). JavaScript documentation. Recuperado de: https://devdocs.io/javascript/
 
-GitHub Docs. (s.f.). Hello World. GitHub. Recuperado de: https://docs.github.com/en/get-started/start-your-journey/hello-world
+draw.io. (s.f.). Getting started — Editor. Recuperado de: https://www.drawio.com/doc/getting-started-edito 
 
-Vue.js. (s.f.). Introduction. Recuperado de: https://vuejs.org/guide/introduction.html
-
-Tailwind CSS. (s.f.). Docs. Recuperado de: https://v2.tailwindcss.com/docs
-
-Vite. (s.f.). Guide. Recuperado de: https://vite.dev/guide/
-
-Postman. (s.f.). Overview. Postman Learning Center. Recuperado de: https://learning.postman.com/docs/introduction/overview/
+Express. (n.d.). Express - Node.js web application framework. Recuperado de: https://expressjs.com/
 
 Figma. (s.f.). Help Center. Recuperado de: https://help.figma.com/hc/en-us/categories/360002042553
 
-draw.io. (s.f.). Getting started — Editor. Recuperado de: https://www.drawio.com/doc/getting-started-edito
+GeeksforGeeks. (2025, 23 de julio). Hexagonal architecture - system design. Recuperado de: https://www.geeksforgeeks.org/system-design/hexagonal-architecture-system-design/
+
+GeeksforGeeks. (2025, 23 de julio). SQL cheat sheet ( basic to advanced). Recuperado de: https://www.geeksforgeeks.org/sql/sql-cheat-sheet/
+
+GeeksforGeeks. (2025, 29 de agosto). Spring Boot tutorial. Recuperado de: https://www.geeksforgeeks.org/advance-java/spring-boot/
+
+GeeksforGeeks. (2025, 10 de septiembre). FastAPI tutorial. Recuperado de: https://www.geeksforgeeks.org/python/fastapi-tutorial/
+
+GeeksforGeeks. (2025, 24 de septiembre). Express.js tutorial. Recuperado de: https://www.geeksforgeeks.org/node-js/express-js/
+
+GeeksforGeeks. (2025, 30 de octubre). Introduction to REST API. Recuperado de: https://www.geeksforgeeks.org/node-js/rest-api-introduction/
+
+GeeksforGeeks. (2025, 7 de noviembre). Introduction to GitHub Actions. Recuperado de: https://www.geeksforgeeks.org/git/github-actions/
+
+GitHub Docs. (s.f.). Actions. GitHub. Recuperado de: https://docs.github.com/en/actions 
+
+GitHub Docs. (s.f.). Hello World. GitHub. Recuperado de: https://docs.github.com/en/get-started/start-your-journey/hello-world 
+
+MongoDB, Inc. (2025). Welcome to the MongoDB docs. MongoDB. Recuperado de: https://www.mongodb.com/docs/
 
 Mozilla. (2025, 8 de julio). JavaScript (MDN Web Docs). Recuperado de: https://developer.mozilla.org/en-US/docs/Web/JavaScript
 
-DevDocs. (s.f.). JavaScript documentation. Recuperado de: https://devdocs.io/javascript/
+Postman. (s.f.). Overview. Postman Learning Center. Recuperado de: https://learning.postman.com/docs/introduction/overview/ 
+
+Ramírez, S. (s.f.). FastAPI. Recuperado de: https://fastapi.tiangolo.com/ 
+
+Refsnes Data. (2025). MongoDB tutorial. W3Schools. Recuperado de: https://www.w3schools.com/mongodb/
+
+Refsnes Data. (2025). PostgreSQL tutorial. W3Schools. Recuperado de: https://www.w3schools.com/postgresql/index.php
+
+Tailwind CSS. (s.f.). Docs. Recuperado de: https://v2.tailwindcss.com/docs 
+
+The PostgreSQL Global Development Group. (2025). PostgreSQL 18.0 documentation. PostgreSQL. Recuperado de: https://www.postgresql.org/docs/current/index.html 
+
+Vite. (s.f.). Guide. Recuperado de: https://vite.dev/guide/ 
+
+Vue.js. (s.f.). Introduction. Recuperado de: https://vuejs.org/guide/introduction.html 
